@@ -1,0 +1,8 @@
+# generic temporary / dev files
+*.pyc
+*.sh
+*.txt
+*.xcf
+nohup.out
+
+/test.py
