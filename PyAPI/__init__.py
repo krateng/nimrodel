@@ -1,3 +1,3 @@
-from .decorators import API
+from ._main import API
 
 name = "PyAPI"

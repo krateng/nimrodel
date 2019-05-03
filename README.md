@@ -18,25 +18,31 @@ Create your API with
 	myapi = API()
 
 
-Then make any method accessible a decorator. All arguments of the function can be passed via URI query arguments.
+
+Then make any class  accessible with a decorator.
 
 
+	@myapi.apiclass("group")
 	class Group:
+
+		def __init__(self,name,apipath,songs):
+			# some stuff
+			self.__apiname__ = apipath
+
+Any instance of that class is now accessible via the combination of class path and its individual path. Now just decorate the methods. All its arguments can be passed via URI query arguments.
 
 		@myapi.get("songs")
 		def get_songs(self,member):
 			return {"songs":[s["title"] for s in self.songs if member in s["performers"]]}
 
 
-Finally, register your objects like this:
+Now create an object and make sure it has an `__apiname__` attribute:
 
 
-	e = Group("Exid")
-	myapi.register_object(e,"exid")
+	e = Group("Exid","exid",exidsongs)
 
 
-Then you can access their functions with simple HTTP calls:
+Then you can access its methods with simple HTTP calls:
 
 
-	HTTP GET http://localhost:1337/myapi/exid/songs?member=Junghwa
-
+	HTTP GET http://localhost:1337/myapi/group/exid/songs?member=Junghwa
