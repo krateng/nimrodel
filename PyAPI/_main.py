@@ -5,9 +5,10 @@ from threading import Thread
 
 
 class API:
-	def __init__(self,port=1337,path="",IPv6=True):
+	def __init__(self,port=1337,path=None,IPv6=True):
 		self.port = port
 		self.path = path
+		self.pathprefix = "" if self.path is None else ("/" + self.path)
 		self.host = "::" if IPv6 else "0.0.0.0"
 
 		self.classes = {}
@@ -16,7 +17,7 @@ class API:
 
 		self.server = Bottle()
 
-		dec = self.server.get("/" + self.path + "/<classname>/<objectname>/<functionname>")
+		dec = self.server.get(self.pathprefix + "/<classname>/<objectname>/<functionname>")
 		self.route_to_function = dec(self.route_to_function)
 
 

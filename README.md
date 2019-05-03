@@ -20,7 +20,6 @@ myapi = API()
 ```
 
 
-
 Then make any class  accessible with a decorator.
 
 ```python
