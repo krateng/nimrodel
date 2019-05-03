@@ -1,6 +1,6 @@
 # PyAPI
 
-A simple Bottle.py-wrapper to provide API access to any python object.
+A simple Bottle.py-wrapper to provide HTTP API access to any python object.
 
 # Requirements
 

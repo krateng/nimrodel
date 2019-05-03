@@ -25,12 +25,37 @@ class API:
 			self.server = server
 
 		# access methods
-		dec = self.server.get(self.pathprefix + "/<classname>/<objectname>/<functionname>")
-		self.route_to_function = dec(self.route_to_function)
+	#	dec = self.server.get(self.pathprefix + "/<classname>/<objectname>/<functionname>")
+	#	self.route_to_function = dec(self.route_to_function)
 
 		# access object itself
-		dec = self.server.get(self.pathprefix + "/<classname>/<objectname>")
-		self.route_to_object = dec(self.route_to_object)
+	#	dec = self.server.get(self.pathprefix + "/<classname>/<objectname>")
+	#	self.route_to_object = dec(self.route_to_object)
+
+		# unified access
+		dec = self.server.get(self.pathprefix + "/<fullpath:path>")
+		self.route = dec(self.route)
+
+	def route(self,fullpath):
+		keys = FormsDict.decode(request.query)
+		nodes = fullpath.split("/")
+
+		cls = self.classes[nodes.pop(0)]
+		obj = self.objects[cls][nodes.pop(0)]
+
+		current = obj
+
+		while len(nodes) > 0:
+			next = nodes.pop(0)
+			func = self.functions[next]
+			current = func(current,**keys)
+
+		# all is done, return last object
+		if callable(getattr(current,"__apidict__",None)):
+			return current.__apidict__()
+		else:
+			return current
+
 
 
 	def route_to_function(self,classname,objectname,functionname):
@@ -69,7 +94,6 @@ class API:
 			original_init = cls.__init__
 
 			def new_init(self2,*args,**kwargs):
-				print("Signing up")
 				# init normally
 				original_init(self2,*args,**kwargs)
 				# then sign up

@@ -6,10 +6,11 @@ thebestapi = API(path="coolapi")
 # we make instances of this class available under the path /coolapi/hero
 @thebestapi.apiclass("hero")
 class Hero:
-	def __init__(self,name,friend,enemy):
+	def __init__(self,name,friend,enemy,sibling=None):
 		self.name = name
 		self.friend = friend
 		self.enemy = enemy
+		self.sibling = sibling
 		# we define how the object's url string is determined - it will be accessible under /coolapi/hero/thisname
 		self.__apiname__ = name.lower().replace(" ","")
 
@@ -39,11 +40,17 @@ class Hero:
 		return self.info()
 
 
+	# if a function returns another API-enabled object, we can simply continue calling its methods
+	@thebestapi.get("sibling")
+	def get_sibling(self):
+		return self.sibling
+
+
 
 
 a = Hero("Finrod Felagund","Barahir","Werewolf")
 b = Hero("Turin","Beleg","Glaurung")
-c = Hero("Galadriel","Melian","Fëanor")
+c = Hero("Galadriel","Melian","Fëanor",sibling=a)
 
 '''
 Try out:
@@ -51,4 +58,5 @@ Try out:
 HTTP GET /coolapi/hero/turin/victory?weapon=sword
 HTTP GET /coolapi/hero/finrodfelagund/party?ranger=Aegnor&archer=Angrod&healer=Galadriel
 HTTP GET /coolapi/hero/galadriel
+HTTP GET /coolapi/hero/galadriel/sibling/hello
 '''
