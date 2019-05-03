@@ -19,6 +19,9 @@ from PyAPI import API
 myapi = API()
 ```
 
+You can pass a port number with `port=42`, a path with `path="api"` and whether you want to serve on IPv4 (`IPv6=False`).
+You can also give the API object an existing bottle server (`server=bottleobject`), in which case your API will be served on the existing server. In this case, it is heavily recommended to pass a path variable to separate API from regular routing of your server.
+
 
 Then make any class  accessible with a decorator.
 
@@ -49,4 +52,4 @@ e = Group("Exid","exid",exidsongs)
 Then you can access its methods with simple HTTP calls:
 
 
-	HTTP GET http://localhost:1337/myapi/group/exid/songs?member=Junghwa
+	HTTP GET http://localhost:1337/group/exid/songs?member=Junghwa

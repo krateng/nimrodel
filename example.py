@@ -34,6 +34,10 @@ class Hero:
 	def info(self):
 		return {"name":self.name,"friend":self.friend,"enemy":self.enemy}
 
+	# if you give your class an __apidict__ method, this will be returned if calling the object without a method
+	def __apidict__(self):
+		return self.info()
+
 
 
 
@@ -46,5 +50,5 @@ Try out:
 
 HTTP GET /coolapi/hero/turin/victory?weapon=sword
 HTTP GET /coolapi/hero/finrodfelagund/party?ranger=Aegnor&archer=Angrod&healer=Galadriel
-HTTP GET /coolapi/hero/galadriel/info
+HTTP GET /coolapi/hero/galadriel
 '''

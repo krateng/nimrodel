@@ -1,31 +1,37 @@
-from bottle import Bottle, run, FormsDict, request
+from bottle import Bottle, FormsDict, request
+from bottle import run as bottlerun
 import waitress
 from threading import Thread
 
 
 
 class API:
-	def __init__(self,port=1337,path=None,IPv6=True):
-		self.port = port
+	def __init__(self,port=1337,path=None,IPv6=True,server=None):
+
 		self.path = path
-		self.pathprefix = "" if self.path is None else ("/" + self.path)
-		self.host = "::" if IPv6 else "0.0.0.0"
+		self.pathprefix = "" if path is None else ("/" + path)
 
 		self.classes = {}
 		self.objects = {}
 		self.functions = {}
 
-		self.server = Bottle()
+		if server is None:
+			host = "::" if IPv6 else "0.0.0.0"
+			port = port
+			self.server = Bottle()
+			t = Thread(target=bottlerun,args=(self.server,),kwargs={"host":host,"port":port,"server":"waitress"})
+			t.start()
+		else:
+			self.server = server
 
+		# access methods
 		dec = self.server.get(self.pathprefix + "/<classname>/<objectname>/<functionname>")
 		self.route_to_function = dec(self.route_to_function)
 
+		# access object itself
+		dec = self.server.get(self.pathprefix + "/<classname>/<objectname>")
+		self.route_to_object = dec(self.route_to_object)
 
-		t = Thread(target=self.startserver)
-		t.start()
-
-	def startserver(self):
-		run(self.server,host=self.host,port=self.port, server="waitress")
 
 	def route_to_function(self,classname,objectname,functionname):
 		keys = FormsDict.decode(request.query)
@@ -33,6 +39,12 @@ class API:
 		obj = self.objects[cls][objectname]
 		func = self.functions[functionname]
 		return func(obj,**keys)
+
+	def route_to_object(self,classname,objectname):
+		keys = FormsDict.decode(request.query)
+		cls = self.classes[classname]
+		obj = self.objects[cls][objectname]
+		return obj.__apidict__(**keys)
 
 	# decorator for the method
 	def get(self,path):
