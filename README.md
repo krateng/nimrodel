@@ -10,6 +10,12 @@ A simple Bottle.py-wrapper to provide HTTP API access to any python object.
 
 # Quick Start
 
+Install with
+
+```
+pip install APyI
+```
+
 Create your API with
 
 ```python

@@ -5,5 +5,8 @@
 *.xcf
 nohup.out
 
-/*.py
+/*
+!/LICENSE
+!/README.md
+!/.gitignore
 !/example.py
