@@ -55,6 +55,7 @@ c = Hero("Galadriel","Melian","Fëanor",sibling=a)
 '''
 Try out:
 
+HTTP GET /api_explorer
 HTTP GET /coolapi/hero/turin/victory?weapon=sword
 HTTP GET /coolapi/hero/finrodfelagund/party?ranger=Aegnor&archer=Angrod&healer=Galadriel
 HTTP GET /coolapi/hero/galadriel
