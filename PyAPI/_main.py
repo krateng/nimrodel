@@ -2,6 +2,7 @@ from bottle import Bottle, FormsDict, request
 from bottle import run as bottlerun
 import waitress
 from threading import Thread
+from ._graphical import page
 
 
 
@@ -13,7 +14,7 @@ class API:
 
 		self.classes = {}
 		self.objects = {}
-		self.functions = {}
+		self.functions = {} #tuple function, method
 
 		self.unassigned_functions = {}
 
@@ -23,6 +24,7 @@ class API:
 			self.server = Bottle()
 			self.server._apis = [self,]
 			t = Thread(target=bottlerun,args=(self.server,),kwargs={"host":host,"port":port,"server":"waitress"})
+			t.daemon = True
 			t.start()
 		else:
 			try:
@@ -37,9 +39,14 @@ class API:
 		exploredec = self.server.get("/api_explorer")
 		exploredec(self.explorer)
 
+		g_exploredec = self.server.get("/gui_api_explorer")
+		g_exploredec(self.gexplorer)
+
 		# unified access
 		dec = self.server.get(self.pathprefix + "/<fullpath:path>")
-		self.route = dec(self.route)
+		dec(self.route)
+		dec = self.server.post(self.pathprefix + "/<fullpath:path>")
+		dec(self.route)
 
 	def explorer(self):
 		return {"apis":[
@@ -48,12 +55,20 @@ class API:
 					"classes":[
 						{
 							"name":cls,
-							"instances":[obj for obj in api.objects[api.classes[cls]]],
-							"methods":[obj for obj in api.functions[api.classes[cls]]]
+							"instances":[name for name in api.objects[api.classes[cls]]],
+							"methods":[
+								{
+									"name":name,
+									"method":api.functions[api.classes[cls]][name][1]
+								} for name in api.functions[api.classes[cls]]
+							]
 						} for cls in api.classes
 					]
 				} for api in self.server._apis
 			]}
+
+	def gexplorer(self):
+		return page(self.explorer())
 
 		# access methods
 	#	dec = self.server.get(self.pathprefix + "/<classname>/<objectname>/<functionname>")
@@ -68,16 +83,29 @@ class API:
 	def route(self,fullpath):
 		keys = FormsDict.decode(request.query)
 		nodes = fullpath.split("/")
+		reqmethod = request.method
+		post_allowed = (reqmethod == "POST")
 
 		cls = self.classes[nodes.pop(0)]
 		obj = self.objects[cls][nodes.pop(0)]
 
 		current = obj
 
+
 		while len(nodes) > 0:
 			next = nodes.pop(0)
-			func = self.functions[current.__class__][next]
-			current = func(current,**keys)
+			func,httpmethod = self.functions[current.__class__][next]
+			if httpmethod == "GET":
+				current = func(current,**keys)
+			elif httpmethod == "POST" and post_allowed:
+				current = func(current,**keys)
+				post_allowed = False
+			else:
+				return {"error":"HTTP method"}
+
+		if post_allowed:
+			# if we made a post request and never used any post step
+			return {"error":"HTTP method"}
 
 		# all is done, return last object
 		if callable(getattr(current,"__apidict__",None)):
@@ -105,7 +133,17 @@ class API:
 
 		def decorator(func):
 			# save reference to this function
-			self.unassigned_functions[path] = func
+			self.unassigned_functions[path] = func,"GET"
+			# return it unchanged
+			return func
+
+		return decorator
+
+	def post(self,path):
+
+		def decorator(func):
+			# save reference to this function
+			self.unassigned_functions[path] = func,"POST"
 			# return it unchanged
 			return func
 
@@ -143,7 +181,7 @@ class API:
 			attrs = [cls.__dict__[k] for k in cls.__dict__]
 			# check if any decorated functions are methods of this class
 			for name in list(self.unassigned_functions.keys()):
-				if self.unassigned_functions[name] in attrs:
+				if self.unassigned_functions[name][0] in attrs:
 					self.functions[cls][name] = self.unassigned_functions[name]
 					del self.unassigned_functions[name]
 
