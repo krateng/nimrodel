@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<title>API Explorer</title>
+		<style>
+			.api_header {
+				padding:10px;
+				font-weight:bold;
+				cursor:pointer;
+			}
+			.api_desc {
+
+			}
+
+			.class_header {
+				padding:10px;
+				background-color:grey;
+				cursor:pointer;
+			}
+			.method_GET {
+				padding:5px;
+				background-color:blue;
+				color:white;
+			}
+			.method_POST {
+				padding:5px;
+				background-color:green;
+				color:white;
+			}
+			.class_desc {
+
+			}
+		</style>
+		<script>
+			function triggerCollapse(e) {
+				id = e.id;
+				otherid = id.replace("_header_","_desc_")
+				descbody = document.getElementById(otherid)
+				if (descbody.style.display == "none") { descbody.style.display = ""; }
+				else { descbody.style.display = "none"; }
+			}
+		</script>
+	</head>
+
+	<body>
+		<pyhp for="api" in="apis">
+			<div onclick="triggerCollapse(this)" class="api_header" id="api_header_{api['url']}">
+				<pyhp echo="api['url']"></pyhp>
+			</div>
+			<div class="api_desc" id="api_desc_{api['url']}">
+				<pyhp for="cls" in="api['classes']">
+					<div onclick="triggerCollapse(this)" class="class_header" id="class_header_{api['url']}_{cls['name']}">
+						<pyhp echo="cls['name']"></pyhp>
+					</div>
+					<div class="class_desc" id="class_desc_{api['url']}_{cls['name']}">
+						<pyhp for="method" in="cls['methods']">
+							<div onclick="triggerCollapse(this)" class="method_header" id="method_header_{api['url']}_{cls['name']}_{method['name']}">
+								<span class="method_{method['method']}"><pyhp echo="method['method']"></pyhp></span>
+								<pyhp echo="method['name']"></pyhp>
+							</div>
+							<div class="method_desc" id="method_desc_{api['url']}_{cls['name']}_{method['name']}">
+								Awesome method
+							</div>
+
+						</pyhp>
+					</div>
+
+				</pyhp>
+
+			</div>
+		</pyhp>
+
+	</body>
+
+</html>
