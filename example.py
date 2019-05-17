@@ -1,4 +1,4 @@
-from PyAPI import *
+from nimrodel import API
 
 # all our api will be accessible under /coolapi
 thebestapi = API(path="coolapi")

@@ -2,7 +2,8 @@ from bottle import Bottle, FormsDict, request
 from bottle import run as bottlerun
 import waitress
 from threading import Thread
-from ._graphical import page
+from doreah.pyhp import parse
+import pkg_resources
 
 
 
@@ -68,7 +69,8 @@ class API:
 			]}
 
 	def gexplorer(self):
-		return page(self.explorer())
+		pyhpstr = pkg_resources.resource_string(__name__,"res/apiexplorer.pyhp")
+		return parse(pyhpstr,self.explorer())
 
 		# access methods
 	#	dec = self.server.get(self.pathprefix + "/<classname>/<objectname>/<functionname>")

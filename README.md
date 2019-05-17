@@ -1,4 +1,4 @@
-# PyAPI
+# Nimrodel
 
 A simple Bottle.py-wrapper to provide HTTP API access to any python object.
 
@@ -7,20 +7,21 @@ A simple Bottle.py-wrapper to provide HTTP API access to any python object.
 * [python3](https://www.python.org/) - [GitHub](https://github.com/python/cpython)
 * [bottle.py](https://bottlepy.org/) - [GitHub](https://github.com/bottlepy/bottle)
 * [waitress](https://docs.pylonsproject.org/projects/waitress/) - [GitHub](https://github.com/Pylons/waitress)
+* [doreah](https://pypi.org/project/doreah/) - [GitHub](https://github.com/krateng/doreah) (at least Version 0.8.2)
 
 # Quick Start
 
 Install with
 
 ```
-pip install APyI
+pip install nimrodel
 ```
 
 Create your API with
 
 ```python
 
-from PyAPI import API
+from nimrodel import API
 
 myapi = API()
 ```
