@@ -20,7 +20,7 @@
 			.api_module > .header {
 				padding:10px;
 				font-weight:bold;
-				font-size:140%;
+				/*font-size:140%;*/
 				cursor:pointer;
 				color:black;
 			}
@@ -46,16 +46,27 @@
 				color:black;
 			}
 
-
+			.method_module {
+				padding-bottom:15px;
+			}
+			.method_module > .body {
+				cursor:pointer;
+				border: 1px solid #cccccc;
+				padding:15px;
+			}
 			.method_module > .header {
 				cursor:pointer;
-				border: 1px solid black;
+				border: 1px solid #cccccc;
 			}
 
 			.method_GET, .method_POST {
 				padding:5px;
 				color:white;
 				border-radius:3px;
+				width: 60px;
+				font-size:80%;
+    				display: inline-block;
+    				text-align: center;
 			}
 			.method_GET {
 				background-color:blue;
@@ -76,7 +87,9 @@
 
 	<body>
 
-		<h1>API Endpoints</h1>
+		<h1>API Explorer</h1>
+		generated with <a href="https://github.com/krateng/nimrodel">nimrodel</a>
+
 		<pyhp for="api" in="apis">
 		<div class="api_module collapsed">
 			<h1 class="header" onclick="toggleCollapse(this)">
@@ -86,18 +99,19 @@
 				<pyhp for="cls" in="api['classes']">
 				<div class="class_module collapsed">
 					<h2 class="header" onclick="toggleCollapse(this)">
-						<pyhp echo="cls['name']"></pyhp>
+						<pyhp echo="api['url'] + '/' + cls['name'] + ''"></pyhp>
 					</h2>
 					<div class="body">
 						<pyhp for="method" in="cls['methods']">
 						<div class="method_module collapsed">
-							<h3 class="header" onclick="toggleCollapse(this)">
+							<div class="header" onclick="toggleCollapse(this)">
 								<span class="method_{method['method']}"><pyhp echo="method['method']"></pyhp></span>
-								<pyhp echo="method['name']"></pyhp>
-							</h3>
+								<pyhp echo="api['url'] + '/' + cls['name'] + '/{' + cls['name'] + '}/' + method['name']"></pyhp>
+							</div>
 
 							<div class="body">
-								Awesome method
+								<b>Description</b><br/>
+								<pyhp echo="method['description']"></pyhp>
 							</div>
 						</div>
 

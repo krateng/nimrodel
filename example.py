@@ -17,22 +17,26 @@ class Hero:
 	# and finally the method calls - this will be accessible under /coolapi/hero/instancename/hello
 	@thebestapi.get("hello")
 	def hi(self):
+		"""Says hello"""
 		return self.name + " bids thee welcome!"
 
 	# if the method takes any arguments, they can be passed with URI arguments:
 	@thebestapi.get("victory")
 	def victory(self,weapon):
+		"""Makes your hero win!"""
 		return self.name + " defeats " + self.enemy + " with a " + weapon + "!"
 
 	# of course this also works with arbitrary argument lists
-	@thebestapi.get("party")
+	@thebestapi.post("party")
 	def party(self,**kwargs):
+		"""Starts an epic quest"""
 		return self.name + " leads a party on a great quest. It consists of: "\
 			+ ", ".join(kwargs[k] + " as the " + k.capitalize() for k in kwargs)
 
 	# dictionaries are simply returned as json objects
 	@thebestapi.get("info")
 	def info(self):
+		"""Shows some info"""
 		return {"name":self.name,"friend":self.friend,"enemy":self.enemy}
 
 	# if you give your class an __apidict__ method, this will be returned if calling the object without a method
@@ -43,6 +47,7 @@ class Hero:
 	# if a function returns another API-enabled object, we can simply continue calling its methods
 	@thebestapi.get("sibling")
 	def get_sibling(self):
+		"""Returns this hero's favorite sibling"""
 		return self.sibling
 
 
@@ -56,6 +61,7 @@ c = Hero("Galadriel","Melian","Fëanor",sibling=a)
 Try out:
 
 HTTP GET /api_explorer
+HTTP GET /gui_api_explorer
 HTTP GET /coolapi/hero/turin/victory?weapon=sword
 HTTP GET /coolapi/hero/finrodfelagund/party?ranger=Aegnor&archer=Angrod&healer=Galadriel
 HTTP GET /coolapi/hero/galadriel

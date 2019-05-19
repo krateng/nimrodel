@@ -60,7 +60,8 @@ class API:
 							"methods":[
 								{
 									"name":name,
-									"method":api.functions[api.classes[cls]][name][1]
+									"method":api.functions[api.classes[cls]][name][1],
+									"description":api.functions[api.classes[cls]][name][0].__doc__
 								} for name in api.functions[api.classes[cls]]
 							]
 						} for cls in api.classes
