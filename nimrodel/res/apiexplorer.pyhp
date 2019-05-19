@@ -2,71 +2,116 @@
 	<head>
 		<title>API Explorer</title>
 		<style>
-			.api_header {
+
+			@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+			body {
+				font-family:"Ubuntu";
+				padding:35px;
+			}
+			.collapsed > .body {
+				display:none;
+			}
+
+			.api_module, .class_module, .method_module {
+				padding-left:25px;
+			}
+
+			.api_module > .header {
 				padding:10px;
 				font-weight:bold;
+				font-size:140%;
 				cursor:pointer;
+				color:black;
 			}
-			.api_desc {
+			.api_module.collapsed > .header {
+				color:grey;
+			}
+			.api_module.collapsed > .header:hover {
+				color:black;
+			}
+
+			.api_module > .body {
 
 			}
 
-			.class_header {
-				padding:10px;
-				background-color:grey;
+
+			.class_module > .header {
 				cursor:pointer;
+			}
+			.class_module.collapsed > .header {
+				color:grey;
+			}
+			.class_module.collapsed > .header:hover {
+				color:black;
+			}
+
+
+			.method_module > .header {
+				cursor:pointer;
+				border: 1px solid black;
+			}
+
+			.method_GET, .method_POST {
+				padding:5px;
+				color:white;
+				border-radius:3px;
 			}
 			.method_GET {
-				padding:5px;
 				background-color:blue;
-				color:white;
 			}
 			.method_POST {
-				padding:5px;
 				background-color:green;
-				color:white;
 			}
 			.class_desc {
 
 			}
 		</style>
 		<script>
-			function triggerCollapse(e) {
-				id = e.id;
-				otherid = id.replace("_header_","_desc_")
-				descbody = document.getElementById(otherid)
-				if (descbody.style.display == "none") { descbody.style.display = ""; }
-				else { descbody.style.display = "none"; }
+			function toggleCollapse(e) {
+				e.parentElement.classList.toggle("collapsed");
 			}
 		</script>
 	</head>
 
 	<body>
+
+		<h1>API Endpoints</h1>
 		<pyhp for="api" in="apis">
-			<div onclick="triggerCollapse(this)" class="api_header" id="api_header_{api['url']}">
+		<div class="api_module collapsed">
+			<h1 class="header" onclick="toggleCollapse(this)">
 				<pyhp echo="api['url']"></pyhp>
-			</div>
-			<div class="api_desc" id="api_desc_{api['url']}">
+			</h1>
+			<div class="body">
 				<pyhp for="cls" in="api['classes']">
-					<div onclick="triggerCollapse(this)" class="class_header" id="class_header_{api['url']}_{cls['name']}">
+				<div class="class_module collapsed">
+					<h2 class="header" onclick="toggleCollapse(this)">
 						<pyhp echo="cls['name']"></pyhp>
-					</div>
-					<div class="class_desc" id="class_desc_{api['url']}_{cls['name']}">
+					</h2>
+					<div class="body">
 						<pyhp for="method" in="cls['methods']">
-							<div onclick="triggerCollapse(this)" class="method_header" id="method_header_{api['url']}_{cls['name']}_{method['name']}">
+						<div class="method_module collapsed">
+							<h3 class="header" onclick="toggleCollapse(this)">
 								<span class="method_{method['method']}"><pyhp echo="method['method']"></pyhp></span>
 								<pyhp echo="method['name']"></pyhp>
-							</div>
-							<div class="method_desc" id="method_desc_{api['url']}_{cls['name']}_{method['name']}">
+							</h3>
+
+							<div class="body">
 								Awesome method
 							</div>
+						</div>
+
 
 						</pyhp>
 					</div>
+				</div>
+
 
 				</pyhp>
 
 			</div>
+		</div>
+
 		</pyhp>
 
 	</body>
