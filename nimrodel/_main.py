@@ -20,7 +20,7 @@ class API:
 		self.objects = {}
 		self.functions = {} #tuple function, method
 
-		self.unassigned_functions = {}
+		self.all_functions = {}
 
 		if server is None:
 			host = "::" if IPv6 else "0.0.0.0"
@@ -147,7 +147,7 @@ class API:
 
 		def decorator(func):
 			# save reference to this function
-			self.unassigned_functions[path] = func,"GET"
+			self.all_functions[path] = func,"GET"
 			# return it unchanged
 			return func
 
@@ -157,7 +157,7 @@ class API:
 
 		def decorator(func):
 			# save reference to this function
-			self.unassigned_functions[path] = func,"POST"
+			self.all_functions[path] = func,"POST"
 			# return it unchanged
 			return func
 
@@ -185,19 +185,22 @@ class API:
 			cls.__init__ = new_init
 
 			# assign functions
-			#self.functions[cls] = self.unassigned_functions
-			#self.unassigned_functions = {}
+			#self.functions[cls] = self.all_functions
+			#self.all_functions = {}
 
 			# unbound functions do not know their class ahead of time,
 			# so we save them temporarily and then assign them on class
 			# registration
 
 			attrs = [cls.__dict__[k] for k in cls.__dict__]
+			# include superclasses
+			for superclass in cls.__bases__:
+				attrs += [superclass.__dict__[k] for k in superclass.__dict__]
 			# check if any decorated functions are methods of this class
-			for name in list(self.unassigned_functions.keys()):
-				if self.unassigned_functions[name][0] in attrs:
-					self.functions[cls][name] = self.unassigned_functions[name]
-					del self.unassigned_functions[name]
+			for name in list(self.all_functions.keys()):
+				if self.all_functions[name][0] in attrs:
+					self.functions[cls][name] = self.all_functions[name]
+					#del self.all_functions[name]
 
 
 
