@@ -20,7 +20,7 @@ class API:
 		self.objects = {}
 		self.functions = {} #tuple function, method
 
-		self.all_functions = {}
+		self.all_functions = []
 
 		if server is None:
 			host = "::" if IPv6 else "0.0.0.0"
@@ -147,7 +147,7 @@ class API:
 
 		def decorator(func):
 			# save reference to this function
-			self.all_functions[path] = func,"GET"
+			self.all_functions.append((path,func,"GET"))
 			# return it unchanged
 			return func
 
@@ -157,7 +157,7 @@ class API:
 
 		def decorator(func):
 			# save reference to this function
-			self.all_functions[path] = func,"POST"
+			self.all_functions.append((path,func,"POST"))
 			# return it unchanged
 			return func
 
@@ -197,9 +197,9 @@ class API:
 			for superclass in cls.__bases__:
 				attrs += [superclass.__dict__[k] for k in superclass.__dict__]
 			# check if any decorated functions are methods of this class
-			for name in list(self.all_functions.keys()):
-				if self.all_functions[name][0] in attrs:
-					self.functions[cls][name] = self.all_functions[name]
+			for (pth,func,method) in self.all_functions:
+				if func in attrs:
+					self.functions[cls][pth] = func,method
 					#del self.all_functions[name]
 
 
