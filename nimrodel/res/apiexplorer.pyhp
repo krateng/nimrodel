@@ -13,8 +13,8 @@
 				display:none;
 			}
 
-			.api_module, .class_module, .method_module {
-				padding-left:25px;
+			.body {
+				padding-left:35px;
 			}
 
 			.api_module > .header {
@@ -75,8 +75,12 @@
 			.method_POST {
 				background-color:green;
 			}
-			.class_desc {
-
+			.instancename {
+				color:grey;
+			}
+			.instancename_selector {
+				color:grey;
+				cursor:pointer;
 			}
 
 			table.paramlist td {
@@ -86,6 +90,24 @@
 		<script>
 			function toggleCollapse(e) {
 				e.parentElement.classList.toggle("collapsed");
+			}
+
+			function insertInstance(name,element) {
+				// reset all selectors
+				sels = element.parentElement.getElementsByClassName("instancename_selector");
+				for (let e of sels) {
+					e.style = "";
+				}
+				// emph this one
+				element.style = "color:black;";
+
+				// fill in name
+				els = element.parentElement.getElementsByClassName("instancename");
+				for (let e of els) {
+					e.innerHTML = name;
+					e.style = "color:black;";
+				}
+
 			}
 		</script>
 	</head>
@@ -106,12 +128,18 @@
 					<h2 class="header" onclick="toggleCollapse(this)">
 						<pyhp echo="api['url'] + '/' + cls['name'] + ''"></pyhp>
 					</h2>
-					<div class="body">
+					<div class="body" a="test">
+						<b>Instances:</b>
+						<pyhp for="instance" in="cls['instances']" separator=" | ">
+							<span class="instancename_selector" onclick="insertInstance('{instance}',this)"><pyhp echo="instance" /></span>
+						</pyhp>
+						<!--<pyhp echo="' | '.join(cls['instances'])" />-->
+						<br/><br/>
 						<pyhp for="method" in="cls['methods']">
 						<div class="method_module collapsed">
 							<div class="header" onclick="toggleCollapse(this)">
 								<span class="method_{method['method']}"><pyhp echo="method['method']"></pyhp></span>
-								<pyhp echo="api['url'] + '/' + cls['name'] + '/{' + cls['name'] + '}/' + method['name']"></pyhp>
+								<pyhp echo="api['url']" />/<pyhp echo="cls['name']" />/<span class="instancename"><pyhp echo="'{' + cls['name'] + '}'" /></span>/<pyhp echo="method['name']" />
 							</div>
 
 							<div class="body">
