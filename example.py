@@ -80,6 +80,8 @@ Try out:
 HTTP GET /api_explorer
 HTTP GET /gui_api_explorer
 HTTP POST /coolapi/hero/turin/victory?weapon=sword
+HTTP POST /coolapi/hero/turin/victory BODY weapon=sword
+HTTP POST /coolapi/hero/turin/victory HEADER Content-Type: application/json BODY {"weapon":"sword"}
 HTTP POST /coolapi/hero/finrodfelagund/party?ranger=Aegnor&archer=Angrod&healer=Galadriel
 HTTP GET /coolapi/hero/galadriel
 HTTP GET /coolapi/hero/galadriel/sibling/hello

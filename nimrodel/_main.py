@@ -89,7 +89,13 @@ class API:
 
 
 	def route(self,fullpath):
-		keys = FormsDict.decode(request.query)
+		headers = request.headers
+		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
+			keys = request.json
+		else:
+			keys = FormsDict.decode(request.params)
+
+
 		nodes = fullpath.split("/")
 		reqmethod = request.method
 		post_allowed = (reqmethod == "POST")
