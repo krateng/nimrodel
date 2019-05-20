@@ -57,6 +57,7 @@
 			.method_module > .header {
 				cursor:pointer;
 				border: 1px solid #cccccc;
+				background-color: #e0e0e0;
 			}
 
 			.method_GET, .method_POST {
@@ -76,6 +77,10 @@
 			}
 			.class_desc {
 
+			}
+
+			table.paramlist td {
+				padding-right:15px;
 			}
 		</style>
 		<script>
@@ -112,6 +117,27 @@
 							<div class="body">
 								<b>Description</b><br/>
 								<pyhp echo="method['description']"></pyhp>
+								<br/><br/>
+								<b>Parameters</b><br/>
+								<table class="paramlist">
+									<pyhp for="parameter" in="method['parameters']">
+									<tr>
+										<td><b><pyhp echo="parameter"></pyhp></b></td>
+										<td><i><pyhp echo="method['parameters'][parameter]['type']"></pyhp></i></td>
+										<td><pyhp echo="method['parameters'][parameter]['desc']"></pyhp></td>
+									</tr>
+									</pyhp>
+								</table>
+								<br/>
+								<b>Return value</b><br/>
+								<pyhp if="'type' in method['returns']">
+								<!--<b>Type:</b> <pyhp echo="method['returns']['type']"></pyhp><br/>-->
+								<i>(<pyhp echo="method['returns']['type']"></pyhp>)</i>
+								</pyhp>
+								<pyhp if="'desc' in method['returns']">
+								<!--<b>Description:</b> <pyhp echo="method['returns']['desc']"></pyhp>-->
+								<pyhp echo="method['returns']['desc']"></pyhp>
+								</pyhp>
 							</div>
 						</div>
 

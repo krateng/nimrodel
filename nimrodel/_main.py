@@ -4,14 +4,17 @@ import waitress
 from threading import Thread
 from doreah.pyhp import parse
 import pkg_resources
+from ._misc import docstring
 
 
 
 class API:
-	def __init__(self,port=1337,path=None,IPv6=True,server=None):
+	def __init__(self,port=1337,path=None,IPv6=True,server=None,parsedoc=docstring):
 
 		self.path = path
 		self.pathprefix = "" if path is None else ("/" + path)
+
+		self.parsedoc = parsedoc
 
 		self.classes = {}
 		self.objects = {}
@@ -61,7 +64,9 @@ class API:
 								{
 									"name":name,
 									"method":api.functions[api.classes[cls]][name][1],
-									"description":api.functions[api.classes[cls]][name][0].__doc__
+									"description":self.parsedoc(api.functions[api.classes[cls]][name][0])["desc"],
+									"parameters":self.parsedoc(api.functions[api.classes[cls]][name][0])["params"],
+									"returns":self.parsedoc(api.functions[api.classes[cls]][name][0])["returns"]
 								} for name in api.functions[api.classes[cls]]
 							]
 						} for cls in api.classes
