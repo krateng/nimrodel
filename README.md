@@ -26,11 +26,12 @@ from nimrodel import API
 myapi = API()
 ```
 
-You can pass a port number with `port=42`, a path with `path="api"` and whether you want to serve on IPv4 (`IPv6=False`).
-You can also give the API object an existing bottle server (`server=bottleobject`), in which case your API will be served on the existing server. In this case, it is heavily recommended to pass a path variable to separate API from regular routing of your server.
+You may optionally pass a port number with `port=42`, a path with `path="api"` and whether you want to serve on IPv4 (`IPv6=False`).
+You can also give the API object an existing bottle server (`server=bottleobject`), in which case your API will be served on the existing server. It is heavily recommended to also pass a path variable to separate API from regular routing of your server.
+You may also pass a custom function with `parsedoc=yourfunction` that takes your method as input and returns a dictionary with the values `desc` for the function description, `params` for a dictionary of parameter names mapped to a dictionary and `returns` for a dictionary of the return value. Both return and param dictionaries can have the keys `type` and `desc` for data type and description respectively. By default nimrodel will attempt to parse your docstring according to the reST standard (Sphinx).
 
 
-Then make any class  accessible with a decorator.
+Then make any class accessible with a decorator.
 
 ```python
 
@@ -60,3 +61,6 @@ Then you can access its methods with simple HTTP calls:
 
 
 	HTTP GET http://localhost:1337/group/exid/songs?member=Junghwa
+
+
+For more in-depth exploration of the possibilities, refer to the file `example.py` included in the repository.

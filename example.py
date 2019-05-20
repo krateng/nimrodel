@@ -1,6 +1,6 @@
 from nimrodel import API
 
-# all our api will be accessible under /coolapi
+# our api will be accessible under /coolapi
 thebestapi = API(path="coolapi")
 
 # we make instances of this class available under the path /coolapi/hero
@@ -23,7 +23,7 @@ class Hero:
 		:rtype: string"""
 		return self.name + " bids thee welcome!"
 
-	# if the method takes any arguments, they can be passed with URI arguments:
+	# if the method takes any arguments, they can be passed with URI arguments or form data / json in the request body:
 	@thebestapi.post("victory")
 	def victory(self,weapon):
 		"""Makes your hero win!
@@ -50,7 +50,7 @@ class Hero:
 		"""Shows some info
 
 		:return: Some info
-		:rtype: dictionary"""
+		:rtype: json"""
 		return {"name":self.name,"friend":self.friend,"enemy":self.enemy}
 
 	# if you give your class an __apidict__ method, this will be returned if calling the object without a method
