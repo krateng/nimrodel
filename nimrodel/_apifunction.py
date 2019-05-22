@@ -1,12 +1,15 @@
-from ._misc import docstring
+from ._misc import docstring, FunctionHolder
 from ._api import AbstractAPI
 
 
 class API(AbstractAPI):
 	def init(self,parsedoc=docstring):
 		self.parsedoc = parsedoc
-		self.functions = {} #tuple function, method
 
+		# nested dicts that lead to the right function
+		# None points to the function at that position if no further path is given
+		# 0 points to functions that accept a variable at this point, its dict includes the 1 key for the var name
+		self.functions = FunctionHolder()
 
 	# returns just the import information of this API
 	def api_info(self):
@@ -15,18 +18,18 @@ class API(AbstractAPI):
 			"type":"functionapi",
 			"endpoints":[
 				{
-					"name":pth,
-					"method":self.functions[pth][1],
-					"description":self.parsedoc(self.functions[pth][0])["desc"],
-					"parameters":self.parsedoc(self.functions[pth][0])["params"],
+					"name":"/".join(func["route"]),
+					"method":func["method"].name,
+					"description":self.parsedoc(func["function"])["desc"],
+					"parameters":self.parsedoc(func["function"])["params"],
 					#"parameters":{
 					#	param:{
 					#		"type":str(self.functions[pth][0].__annotations__.get(param)),
 					#		"desc":"tbd"
 					#	}
 					#for param in self.functions[pth][0].__code__.co_varnames},
-					"returns":self.parsedoc(self.functions[pth][0])["returns"]
-				} for pth in self.functions
+					"returns":self.parsedoc(func["function"])["returns"]
+				} for func in self.functions
 			]
 		}
 
@@ -35,26 +38,15 @@ class API(AbstractAPI):
 
 	def handle(self,nodes,reqmethod,keys):
 
-		func,httpmethod = self.functions[nodes[0]]
-		if httpmethod == reqmethod:
-
-			# convert to hinted types
-			types = func.__annotations__
-			for k in keys:
-				if k in types:
-					keys[k] = types[k](keys[k])
-
-			return func(**keys)
+		return self.functions.call(reqmethod,nodes,keys)
 
 
 
 	def get(self,path):
 
 		def decorator(func):
-			#assign the normal bottle decorator
-			#dec = self.server.get(self.pathprefix + path)
-			#dec(func)
-			self.functions[path] = func,"GET"
+			self.functions.add(func,"GET",path)
+			#self.functions[path] = func,"GET"
 
 			# return function unchanged
 			return func
@@ -64,10 +56,7 @@ class API(AbstractAPI):
 	def post(self,path):
 
 		def decorator(func):
-			#assign the normal bottle decorator
-			#dec = self.server.post(self.pathprefix + path)
-			#dec(func)
-			self.functions[path] = func,"POST"
+			self.functions.add(func,"POST",path)
 
 			# return function unchanged
 			return func

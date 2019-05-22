@@ -103,6 +103,8 @@ from nimrodel import EAPI
 # we use the existing server
 simpleapi = EAPI(path="otherapi",server=thebestapi.server)
 
+bestidols = ["Tzuyu","Rosé","Jennie","Seolhyun","Junghwa","Momo","Jimin","IU","Chungha"]
+
 
 # now we make functions (not methods!) directly accessible
 
@@ -115,19 +117,19 @@ def get_bestidols(maxnumber:int=None):
 	:return: Ordered list of idols
 	"""
 	return {
-		"bestidols":[
-			"Tzuyu",
-			"Rosé",
-			"Jennie",
-			"Seolhyun",
-			"Junghwa",
-			"Momo",
-			"Jimin",
-			"IU",
-			"Chungha"
-		][:maxnumber] # None works by not slicing the list at all, so it does the job of math.inf here
+		"bestidols":bestidols[:maxnumber]
+		# None works by not slicing the list at all, so it does the job of math.inf here
 	}
 
+@simpleapi.get("idol/<rank>")
+def get_idol(rank:int):
+	"""Returns the idol of the given rank
+
+	:param int rank: Rank
+	:return: Name
+	"""
+
+	return bestidols[rank-1]
 
 print(yellow("A second API has been added at runtime to the same server. Refresh the API explorer to see it!"))
 input("Press any key to terminate")
