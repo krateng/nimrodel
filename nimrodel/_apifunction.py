@@ -31,6 +31,13 @@ class API(AbstractAPI):
 
 		func,httpmethod = self.functions[nodes[0]]
 		if httpmethod == reqmethod:
+
+			# convert to hinted types
+			types = func.__annotations__
+			for k in keys:
+				if k in types:
+					keys[k] = types[k](keys[k])
+
 			return func(**keys)
 
 

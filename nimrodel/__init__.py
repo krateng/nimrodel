@@ -9,7 +9,7 @@ EAPI = EndpointAPI
 API = OAPI
 
 name = "nimrodel"
-version = 0,3,0
+version = 0,4,0
 author = {
 	"name": "Johannes Krattenmacher",
 	"email": "python@krateng.dev",
