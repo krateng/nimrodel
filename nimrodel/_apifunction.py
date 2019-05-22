@@ -19,6 +19,12 @@ class API(AbstractAPI):
 					"method":self.functions[pth][1],
 					"description":self.parsedoc(self.functions[pth][0])["desc"],
 					"parameters":self.parsedoc(self.functions[pth][0])["params"],
+					#"parameters":{
+					#	param:{
+					#		"type":str(self.functions[pth][0].__annotations__.get(param)),
+					#		"desc":"tbd"
+					#	}
+					#for param in self.functions[pth][0].__code__.co_varnames},
 					"returns":self.parsedoc(self.functions[pth][0])["returns"]
 				} for pth in self.functions
 			]

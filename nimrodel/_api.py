@@ -4,6 +4,7 @@ import waitress
 from threading import Thread
 from doreah.pyhp import parse
 import pkg_resources
+from . import versionstr
 
 
 
@@ -54,9 +55,14 @@ class AbstractAPI:
 
 
 	def explorer(self):
-		return {"apis":[
+		return {
+			"information":{
+				"nimrodel-version":versionstr
+			},
+			"apis":[
 				api.api_info() for api in self.server._apis
-			]}
+			]
+		}
 
 	def gexplorer(self):
 		pyhpstr = pkg_resources.resource_string(__name__,"res/apiexplorer.pyhp")

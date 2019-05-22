@@ -1,15 +1,6 @@
-from ._apiobject import API as ObjectAPI
-from ._apifunction import API as EndpointAPI
-
-# short names
-OAPI = ObjectAPI
-EAPI = EndpointAPI
-
-# default
-API = OAPI
-
 name = "nimrodel"
 version = 0,4,0
+versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",
 	"email": "python@krateng.dev",
@@ -20,3 +11,14 @@ requires = [
 	"waitress",
 	"doreah"
 ]
+
+
+from ._apiobject import API as ObjectAPI
+from ._apifunction import API as EndpointAPI
+
+# short names
+OAPI = ObjectAPI
+EAPI = EndpointAPI
+
+# default
+API = OAPI

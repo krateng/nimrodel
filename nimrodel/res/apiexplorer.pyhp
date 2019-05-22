@@ -115,7 +115,7 @@
 	<body>
 
 		<h1>API Explorer</h1>
-		generated with <a href="https://github.com/krateng/nimrodel">nimrodel</a>
+		generated with <a href="https://github.com/krateng/nimrodel">nimrodel</a> <pyhp echo="information['nimrodel-version']" />
 
 		<pyhp for="api" in="apis">
 		<div class="api_module collapsed">
