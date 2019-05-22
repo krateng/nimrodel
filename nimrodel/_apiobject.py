@@ -54,25 +54,29 @@ class API:
 
 	def explorer(self):
 		return {"apis":[
-				{
-					"url":api.pathprefix,
-					"classes":[
-						{
-							"name":cls,
-							"instances":[name for name in api.objects[api.classes[cls]]],
-							"methods":[
-								{
-									"name":name,
-									"method":api.functions[api.classes[cls]][name][1],
-									"description":self.parsedoc(api.functions[api.classes[cls]][name][0])["desc"],
-									"parameters":self.parsedoc(api.functions[api.classes[cls]][name][0])["params"],
-									"returns":self.parsedoc(api.functions[api.classes[cls]][name][0])["returns"]
-								} for name in api.functions[api.classes[cls]]
-							]
-						} for cls in api.classes
-					]
-				} for api in self.server._apis
+				api.explorer_this() for api in self.server._apis
 			]}
+
+	def explorer_this(self):
+		return {
+			"url":self.pathprefix,
+			"type":"objectapi",
+			"classes":[
+				{
+					"name":cls,
+					"instances":[name for name in self.objects[self.classes[cls]]],
+					"methods":[
+						{
+							"name":name,
+							"method":self.functions[self.classes[cls]][name][1],
+							"description":self.parsedoc(self.functions[self.classes[cls]][name][0])["desc"],
+							"parameters":self.parsedoc(self.functions[self.classes[cls]][name][0])["params"],
+							"returns":self.parsedoc(self.functions[self.classes[cls]][name][0])["returns"]
+						} for name in self.functions[self.classes[cls]]
+					]
+				} for cls in self.classes
+			]
+		}
 
 	def gexplorer(self):
 		pyhpstr = pkg_resources.resource_string(__name__,"res/apiexplorer.pyhp")

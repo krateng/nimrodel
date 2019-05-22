@@ -57,10 +57,11 @@ Now create an object and make sure it has an `__apiname__` attribute:
 e = Group("Exid","exid",exidsongs)
 ```
 
-Then you can access its methods with simple HTTP calls:
+Then you can access its methods with simple HTTP calls like `/group/exid/songs?member=Junghwa`.
 
+There is also an integrated graphical API explorer under `/gui_api_explorer`.
 
-	HTTP GET http://localhost:1337/group/exid/songs?member=Junghwa
+Nimrodel also allows you to create a simple function-based API with the class `EAPI`.
 
 
 For more in-depth exploration of the possibilities, refer to the file `example.py` included in the repository.
