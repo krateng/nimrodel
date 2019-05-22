@@ -10,18 +10,21 @@ from . import versionstr
 
 class AbstractAPI:
 
-	def __init__(self,server=None,port=1337,IPv6=True,path="/api",**kwargs):
+	def __init__(self,server=None,port=1337,IPv6=True,path="api",delay=False,**kwargs):
 
 		self.path = path
 		self.pathprefix = "" if path is None else ("/" + path)
 
 		self.init(**kwargs)
 
-		self.initserver(port=port,path=path,IPv6=IPv6,server=server)
-		self.setup_explorer()
-		self.setup_routing()
+		if delay:
+			pass
+		else:
+			self.initserver(port=port,IPv6=IPv6,server=server)
+			self.setup_explorer()
+			self.setup_routing()
 
-	def initserver(self,server,port,IPv6,path):
+	def initserver(self,server,port,IPv6):
 
 		if server is None:
 			host = "::" if IPv6 else "0.0.0.0"
@@ -37,6 +40,13 @@ class AbstractAPI:
 			except:
 				server._apis = [self]
 			self.server = server
+
+	# if delay has been specified on creation, we can now mount this api to a server
+	def mount(self,server=None,port=1337,IPv6=True):
+
+		self.initserver(port=port,IPv6=IPv6,server=server)
+		self.setup_explorer()
+		self.setup_routing()
 
 	def setup_explorer(self):
 		# API explorer

@@ -109,6 +109,11 @@ simpleapi = EAPI(path="otherapi",server=thebestapi.server)
 @simpleapi.get("bestidols")
 # with type hints we make sure that query arguments are directly converted
 def get_bestidols(maxnumber:int=None):
+	"""Returns the best k-pop idols in order
+
+	:param int maxnumber: Only return so many idols
+	:return: Ordered list of idols
+	"""
 	return {
 		"bestidols":[
 			"Tzuyu",
