@@ -1,4 +1,9 @@
+import time
 from nimrodel import API
+
+def blue(txt): return "\033[94m" + txt + "\033[0m"
+def green(txt): return "\033[92m" + txt + "\033[0m"
+def yellow(txt): return "\033[93m" + txt + "\033[0m"
 
 # our api will be accessible under /coolapi
 thebestapi = API(path="coolapi")
@@ -86,3 +91,38 @@ HTTP POST /coolapi/hero/finrodfelagund/party?ranger=Aegnor&archer=Angrod&healer=
 HTTP GET /coolapi/hero/galadriel
 HTTP GET /coolapi/hero/galadriel/sibling/hello
 '''
+
+time.sleep(1)
+print(yellow("Your first example API is now accessible! Visit ") + blue("http://[::1]:1337/gui_api_explorer") + yellow(" or any other of the paths you can find in the example.py file!"))
+input("Press any key to continue")
+
+# now let's add a endpoint-based (non-object-oriented) API
+
+from nimrodel import EAPI
+
+# we use the existing server
+simpleapi = EAPI(path="otherapi",server=thebestapi.server)
+
+
+# now we make functions (not methods!) directly accessible
+
+@simpleapi.get("bestidols")
+# with type hints we make sure that query arguments are directly converted
+def get_bestidols(maxnumber:int=None):
+	return {
+		"bestidols":[
+			"Tzuyu",
+			"Rosé",
+			"Jennie",
+			"Seolhyun",
+			"Junghwa",
+			"Momo",
+			"Jimin",
+			"IU",
+			"Chungha"
+		][:maxnumber] # None works by not slicing the list at all, so it does the job of math.inf here
+	}
+
+
+print(yellow("A second API has been added at runtime to the same server. Refresh the API explorer to see it!"))
+input("Press any key to terminate")
