@@ -1,5 +1,5 @@
 name = "nimrodel"
-version = 0,4,2
+version = 0,4,3
 versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",
@@ -9,7 +9,8 @@ author = {
 requires = [
 	"bottle",
 	"waitress",
-	"doreah"
+	"doreah",
+	"parse"
 ]
 
 
@@ -22,3 +23,6 @@ EAPI = EndpointAPI
 
 # default
 API = OAPI
+
+
+from ._misc import Multi

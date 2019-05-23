@@ -44,74 +44,13 @@ def docstring(func):
 
 
 
+# type hint for multiple values
+class MultiType:
 
-# class for routing
+	# so we can define something like Multi[int]
+	def __getitem__(self,key):
+		instance = self.__class__()
+		instance.elementtype = key
+		return instance
 
-import enum
-
-class Http(enum.Enum):
-	GET = 1
-	POST = 2
-
-	def __str__(self):
-		return self.name
-
-class FunctionHolder:
-
-	def __init__(self):
-		self.functions = {}
-		# this dict:
-		# 	name				-> subdict				fixed paths
-		#	None				-> (varname, subdict)	for variable
-		#	GET					-> func					get function at this path
-		#	POST				-> func					post function at this path
-
-		self.functionlist = []
-
-	def add(self,func,method,path):
-		route = path.split("/")
-		method = {"get":Http.GET,"post":Http.POST}[method.lower()]
-		pointer = self.functions
-		for node in route:
-			if node.startswith("<") and node.endswith(">"):
-				pointer[None] = pointer.setdefault(None,(node[1:-1],{}))
-				pointer = pointer[None][1]
-			else:
-				pointer[node] = pointer.setdefault(node,{})
-				pointer = pointer[node]
-		pointer[method] = func
-		self.functionlist.append(
-			{
-				"function":func,
-				"method":method,
-				"route":["{" + node[1:-1] + "}" if node.startswith("<") and node.endswith(">") else node for node in route],
-			}
-		)
-
-	def call(self,method,route,keys):
-		method = {"get":Http.GET,"post":Http.POST}[method.lower()]
-		pointer = self.functions
-		for node in route:
-			# explicit name
-			if node in pointer:
-				pointer = pointer[node]
-			else:
-				keys[pointer[None][0]] = node # set argument to uri part
-				pointer = pointer[None][1]
-
-		func = pointer[method]
-
-		# convert to hinted types
-		types = func.__annotations__
-		for k in keys:
-			if k in types:
-				keys[k] = types[k](keys[k])
-
-		return func(**keys)
-
-
-	# enable iteration over all functions
-	def __getitem__(self,pos):
-		return self.functionlist[pos]
-	def __len__(self):
-		return len(self.functionlist)
+Multi = MultiType()

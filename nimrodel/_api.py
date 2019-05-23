@@ -50,10 +50,10 @@ class AbstractAPI:
 
 	def setup_explorer(self):
 		# API explorer
-		exploredec = self.server.get("/api_explorer")
+		exploredec = self.server.get("/api_info")
 		exploredec(self.explorer)
 
-		g_exploredec = self.server.get("/gui_api_explorer")
+		g_exploredec = self.server.get("/api_explorer")
 		g_exploredec(self.gexplorer)
 
 	def setup_routing(self):

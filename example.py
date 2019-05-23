@@ -83,7 +83,7 @@ c = Hero("Galadriel","Melian","Fëanor",sibling=a)
 Try out:
 
 HTTP GET /api_explorer
-HTTP GET /gui_api_explorer
+HTTP GET /api_info
 HTTP POST /coolapi/hero/turin/victory?weapon=sword
 HTTP POST /coolapi/hero/turin/victory BODY weapon=sword
 HTTP POST /coolapi/hero/turin/victory HEADER Content-Type: application/json BODY {"weapon":"sword"}
@@ -93,7 +93,7 @@ HTTP GET /coolapi/hero/galadriel/sibling/hello
 '''
 
 time.sleep(1)
-print(yellow("Your first example API is now accessible! Visit ") + blue("http://[::1]:1337/gui_api_explorer") + yellow(" or any other of the paths you can find in the example.py file!"))
+print(yellow("Your first example API is now accessible! Visit ") + blue("http://[::1]:1337/api_explorer") + yellow(" or any other of the paths you can find in the example.py file!"))
 input("Press any key to continue")
 
 # now let's add a endpoint-based (non-object-oriented) API
@@ -121,7 +121,16 @@ def get_bestidols(maxnumber:int=None):
 		# None works by not slicing the list at all, so it does the job of math.inf here
 	}
 
-@simpleapi.get("idol/<rank>")
+'''
+Try out:
+
+HTTP GET /otherapi/bestidols?maxnumber=4
+'''
+
+
+# we can also put variables directly in the path
+
+@simpleapi.get("idol/{rank}")
 def get_idol(rank:int):
 	"""Returns the idol of the given rank
 
@@ -130,6 +139,60 @@ def get_idol(rank:int):
 	"""
 
 	return bestidols[rank-1]
+
+
+'''
+Try out:
+
+HTTP GET /otherapi/idol/2
+'''
+
+
+# if we want to accept a path segment of arbitrary length, simply type-hint it with Multi
+
+from nimrodel import Multi
+
+@simpleapi.get("idols/{ranks}")
+def get_idols(ranks:Multi[int]):
+	"""Returns the idol of the given ranks
+
+	:param *int *ranks: Ranks
+	:return: List of names
+	"""
+
+	return {"r":ranks}
+
+	return [bestidols[r] for r in ranks]
+
+
+'''
+Try out:
+
+HTTP GET /otherapi/idols/2/3/5
+'''
+
+
+# and of course lists of arguments also work for query string arguments
+
+@simpleapi.get("ranks")
+def get_ranks(idol:Multi[str]):
+	"""Returns the ranks of all requested idols
+
+	:param *string *idol: Names of the idols
+	:return: JSON object
+	"""
+
+	return {i:bestidols.index(i) + 1 for i in idol}
+
+
+
+'''
+Try out:
+
+HTTP GET /otherapi/ranks?idol=Tzuyu&idol=Junghwa
+'''
+
+
 
 print(yellow("A second API has been added at runtime to the same server. Refresh the API explorer to see it!"))
 input("Press any key to terminate")

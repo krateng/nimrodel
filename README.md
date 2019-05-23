@@ -8,6 +8,7 @@ A simple Bottle.py-wrapper to provide HTTP API access to any python object.
 * [bottle.py](https://bottlepy.org/) - [GitHub](https://github.com/bottlepy/bottle)
 * [waitress](https://docs.pylonsproject.org/projects/waitress/) - [GitHub](https://github.com/Pylons/waitress)
 * [doreah](https://pypi.org/project/doreah/) - [GitHub](https://github.com/krateng/doreah) (at least Version 0.8.6)
+* [parse](https://pypi.org/project/parse/) - [GitHub](https://github.com/r1chardj0n3s/parse)
 
 # Quick Start
 
@@ -59,7 +60,7 @@ e = Group("Exid","exid",exidsongs)
 
 Then you can access its methods with simple HTTP calls like `/group/exid/songs?member=Junghwa`.
 
-There is also an integrated graphical API explorer under `/gui_api_explorer`.
+There is also an integrated graphical API explorer under `/api_explorer`.
 
 Nimrodel also allows you to create a simple function-based API with the class `EAPI`.
 

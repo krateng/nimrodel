@@ -1,15 +1,16 @@
-from ._misc import docstring, FunctionHolder
+from ._misc import docstring, MultiType
 from ._api import AbstractAPI
+import parse
+from bottle import FormsDict
 
 
 class API(AbstractAPI):
 	def init(self,parsedoc=docstring):
 		self.parsedoc = parsedoc
 
-		# nested dicts that lead to the right function
-		# None points to the function at that position if no further path is given
-		# 0 points to functions that accept a variable at this point, its dict includes the 1 key for the var name
-		self.functions = FunctionHolder()
+		#self.functions = FunctionHolder()
+		self.functions = []
+		# dict: route, method, func
 
 	# returns just the import information of this API
 	def api_info(self):
@@ -18,47 +19,89 @@ class API(AbstractAPI):
 			"type":"functionapi",
 			"endpoints":[
 				{
-					"name":"/".join(func["route"]),
-					"method":func["method"].name,
-					"description":self.parsedoc(func["function"])["desc"],
-					"parameters":self.parsedoc(func["function"])["params"],
+					"name":f["path"],
+					"method":f["method"],
+					"description":self.parsedoc(f["func"])["desc"],
+					"parameters":self.parsedoc(f["func"])["params"],
 					#"parameters":{
 					#	param:{
 					#		"type":str(self.functions[pth][0].__annotations__.get(param)),
 					#		"desc":"tbd"
 					#	}
 					#for param in self.functions[pth][0].__code__.co_varnames},
-					"returns":self.parsedoc(func["function"])["returns"]
-				} for func in self.functions
+					"returns":self.parsedoc(f["func"])["returns"]
+				} for f in self.functions
 			]
 		}
 
 
 
 
-	def handle(self,nodes,reqmethod,keys):
+	def handle(self,nodes,reqmethod,querykeys):
 
-		return self.functions.call(reqmethod,nodes,keys)
 
+		for f in self.functions:
+
+			pathkeys = FormsDict()
+
+			# match against paths
+			r = parse.parse(f["path"],"/".join(nodes))
+			if r is not None:
+				func = f["func"]
+				for k in r.named:
+					# set vars according to path match
+					pathkeys[k] = r[k]
+
+				types = func.__annotations__
+				for k in pathkeys:
+					if k in types:
+						if isinstance(types[k],MultiType):
+							subtype = types[k].elementtype
+							pk = pathkeys[k].split("/")
+							pathkeys[k] = [subtype(e) for e in pk]
+						else:
+							pathkeys[k] = types[k](pathkeys[k])
+
+				for k in querykeys:
+					if k in types:
+						if isinstance(types[k],MultiType):
+							subtype = types[k].elementtype
+							qk = querykeys.getall(k)
+							querykeys[k] = [subtype(e) for e in qk]
+						else:
+							querykeys[k] = types[k](querykeys[k])
+
+				return func(**querykeys,**pathkeys)
+
+		return {"error":"Not found"}
 
 
 	def get(self,path):
 
 		def decorator(func):
-			self.functions.add(func,"GET",path)
-			#self.functions[path] = func,"GET"
+			self.functions.append(
+				{
+					"path":path,
+					"method":"GET",
+					"func":func
+				}
+			)
 
 			# return function unchanged
 			return func
-
 		return decorator
 
 	def post(self,path):
 
 		def decorator(func):
-			self.functions.add(func,"POST",path)
+			self.functions.append(
+				{
+					"path":path,
+					"method":"POST",
+					"func":func
+				}
+			)
 
 			# return function unchanged
 			return func
-
 		return decorator
