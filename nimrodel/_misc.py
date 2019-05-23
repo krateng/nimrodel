@@ -54,3 +54,4 @@ class MultiType:
 		return instance
 
 Multi = MultiType()
+Multi.elementtype = str

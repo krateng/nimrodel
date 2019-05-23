@@ -42,6 +42,8 @@ class API(AbstractAPI):
 
 		for f in self.functions:
 
+			if f["method"] != reqmethod: continue
+
 			pathkeys = FormsDict()
 
 			# match against paths
