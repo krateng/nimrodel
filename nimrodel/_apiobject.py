@@ -46,7 +46,7 @@ class API(AbstractAPI):
 
 
 
-	def handle(self,nodes,reqmethod,keys):
+	def handle(self,nodes,reqmethod,keys,headers):
 
 		post_allowed = (reqmethod == "POST")
 

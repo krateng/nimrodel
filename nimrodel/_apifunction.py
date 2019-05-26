@@ -37,7 +37,7 @@ class API(AbstractAPI):
 
 
 
-	def handle(self,nodes,reqmethod,querykeys):
+	def handle(self,nodes,reqmethod,querykeys,headers):
 
 
 		for f in self.functions:
@@ -73,19 +73,23 @@ class API(AbstractAPI):
 						else:
 							querykeys[k] = types[k](querykeys[k])
 
-				return func(**querykeys,**pathkeys)
+				if f["headers"]:
+					return func(**querykeys,**pathkeys,**headers)
+				else:
+					return func(**querykeys,**pathkeys)
 
 		return {"error":"Not found"}
 
 
-	def get(self,path):
+	def get(self,path,pass_headers=False):
 
 		def decorator(func):
 			self.functions.append(
 				{
 					"path":path,
 					"method":"GET",
-					"func":func
+					"func":func,
+					"headers":pass_headers
 				}
 			)
 
@@ -93,14 +97,15 @@ class API(AbstractAPI):
 			return func
 		return decorator
 
-	def post(self,path):
+	def post(self,path,pass_headers=False):
 
 		def decorator(func):
 			self.functions.append(
 				{
 					"path":path,
 					"method":"POST",
-					"func":func
+					"func":func,
+					"headers":pass_headers
 				}
 			)
 

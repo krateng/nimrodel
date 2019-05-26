@@ -85,8 +85,7 @@ class AbstractAPI:
 		headers = request.headers
 
 		keys = FormsDict.decode(request.query)
-		keys.update(headers)
-		
+
 		for k in keys:
 			print(k,keys[k])
 
@@ -102,4 +101,4 @@ class AbstractAPI:
 		nodes = fullpath.split("/")
 		reqmethod = request.method
 
-		return self.handle(nodes,reqmethod,keys)
+		return self.handle(nodes,reqmethod,keys,headers)
