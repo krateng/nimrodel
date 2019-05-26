@@ -86,7 +86,10 @@ class AbstractAPI:
 		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
 			keys = request.json
 		else:
-			keys = FormsDict.decode(request.params)
+			keys = FormsDict.decode(request.forms)
+
+		# query keys are accepted even when there's a json body
+		keys.extend(FormsDict.decode(request.query))
 
 		nodes = fullpath.split("/")
 		reqmethod = request.method
