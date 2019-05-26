@@ -83,13 +83,15 @@ class AbstractAPI:
 	def route(self,fullpath):
 		# preprocess all requests
 		headers = request.headers
-		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
-			keys = request.json
-		else:
-			keys = FormsDict.decode(request.forms)
 
-		# query keys are accepted even when there's a json body
-		keys.extend(FormsDict.decode(request.query))
+		keys = FormsDict.decode(request.query)
+
+		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
+			keys.extend(request.json)
+
+		else:
+			keys.extend(FormsDict.decode(request.forms))
+
 
 		nodes = fullpath.split("/")
 		reqmethod = request.method
