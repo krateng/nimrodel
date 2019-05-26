@@ -85,13 +85,19 @@ class AbstractAPI:
 		headers = request.headers
 
 		keys = FormsDict.decode(request.query)
+		keys.update(headers)
+		
+		for k in keys:
+			print(k,keys[k])
 
 		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
-			keys.extend(request.json)
+			json = request.json if request.json is not None else {}
+			keys.update(json)
 
 		else:
-			keys.extend(FormsDict.decode(request.forms))
+			keys.update(FormsDict.decode(request.forms))
 
+		print(keys)
 
 		nodes = fullpath.split("/")
 		reqmethod = request.method
