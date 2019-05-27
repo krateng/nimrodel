@@ -195,4 +195,46 @@ HTTP GET /otherapi/ranks?idol=Tzuyu&idol=Junghwa
 
 
 print(yellow("A second API has been added at runtime to the same server. Refresh the API explorer to see it!"))
+input("Press any key to continue")
+
+
+
+
+from nimrodel import RAPI
+
+# and now, a simplified version of the object-based API that allows creating,
+# patching, deleting and fetching resources with the usual HTTP methods
+
+api = RAPI(path="restapi",server=thebestapi.server)
+
+
+@api.apiclass("faction")
+class Faction:
+	def __init__(self,leader,generals=[],admirals=[]):
+		self.leader = leader
+		self.__apiname__ = leader.lower().replace(" ","")
+		self.generals = generals[:]
+		self.admirals = admirals[:]
+
+	# we don't need to define any methods with api access, just the apidict representation
+
+	def __apidict__(self):
+		return {
+			"leader":self.leader,
+			"generals":self.generals,
+			"admirals":self.admirals
+		}
+
+
+'''
+Try out:
+
+HTTP POST /restapi/faction HEADER Content-Type: application/json BODY {"leader":"Cao Cao","admirals":["Cai Mao","Zhang Yun"]}
+HTTP POST /restapi/faction HEADER Content-Type: application/json BODY {"leader":"Liu Bei","generals":["Zhuge Liang"]}
+HTTP PATCH /restapi/faction/liubei HEADER Content-Type: application/json BODY {"generals":["Guan Yu","Zhang Fei","Zhuge Liang"]}
+HTTP DELETE /restapi/faction/caocao
+'''
+
+
+print(yellow("Now we also have a RESTful API. Refresh the API explorer again!"))
 input("Press any key to terminate")
