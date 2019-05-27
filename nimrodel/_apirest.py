@@ -21,9 +21,8 @@ class API(AbstractAPI):
 				{
 					"name":cls,
 					"instances":[name for name in self.objects[self.classes[cls]]],
-					"attributes":{
-
-					}
+					"methods":[],
+					"attributes":{}
 				} for cls in self.classes
 			]
 		}
@@ -67,7 +66,9 @@ class API(AbstractAPI):
 
 		if reqmethod == "DELETE":
 			del self.objects[cls][objkey]
-			return "OK"
+			return {"status":"success"}
+
+		return {"status":"failure"}
 
 
 	# decorator for the class

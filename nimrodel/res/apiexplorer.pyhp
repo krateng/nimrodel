@@ -60,7 +60,7 @@
 				background-color: #e0e0e0;
 			}
 
-			.method_GET, .method_POST {
+			.method_GET, .method_POST, .method_PATCH, .method_DELETE {
 				padding:5px;
 				color:white;
 				border-radius:3px;
@@ -74,6 +74,13 @@
 			}
 			.method_POST {
 				background-color:green;
+			}
+			.method_PATCH {
+				background-color:yellow;
+				color:black;
+			}
+			.method_DELETE {
+				background-color:red;
 			}
 			.instancename {
 				color:grey;
@@ -123,9 +130,14 @@
 				<pyhp echo="api['url']"></pyhp>
 			</h1>
 
-			<!-- OBJECT /REST APIS -->
-			<pyhp if="api['type'] in ['objectapi','restapi']">
+			<!-- OBJECT APIS -->
+			<pyhp if="api['type'] == 'objectapi'">
 			<pyhp include="apiexplorer_object.pyhp" />
+			</pyhp>
+
+			<!-- REST APIS -->
+			<pyhp if="api['type'] == 'restapi'">
+			<pyhp include="apiexplorer_rest.pyhp" />
 			</pyhp>
 
 
