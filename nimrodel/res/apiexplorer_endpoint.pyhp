@@ -1,0 +1,38 @@
+<div class="body">
+	<pyhp for="endpoint" in="api['endpoints']">
+	<div class="method_module collapsed">
+		<div class="header" onclick="toggleCollapse(this)">
+			<span class="method_{endpoint['method']}"><pyhp echo="endpoint['method']"></pyhp></span>
+			<pyhp echo="api['url']" />/<pyhp echo="endpoint['name']" />
+		</div>
+
+		<div class="body">
+			<b>Description</b><br/>
+			<pyhp echo="endpoint['description']"></pyhp>
+			<br/><br/>
+			<b>Parameters</b><br/>
+			<table class="paramlist">
+				<pyhp for="parameter" in="endpoint['parameters']">
+				<tr>
+					<td><b><pyhp echo="parameter"></pyhp></b></td>
+					<td><i><pyhp echo="endpoint['parameters'][parameter]['type']"></pyhp></i></td>
+					<td><pyhp echo="endpoint['parameters'][parameter]['desc']"></pyhp></td>
+				</tr>
+				</pyhp>
+			</table>
+			<br/>
+			<b>Return value</b><br/>
+			<pyhp if="'type' in endpoint['returns']">
+			<!--<b>Type:</b> <pyhp echo="method['returns']['type']"></pyhp><br/>-->
+			<i>(<pyhp echo="endpoint['returns']['type']"></pyhp>)</i>
+			</pyhp>
+			<pyhp if="'desc' in endpoint['returns']">
+			<!--<b>Description:</b> <pyhp echo="method['returns']['desc']"></pyhp>-->
+			<pyhp echo="endpoint['returns']['desc']"></pyhp>
+			</pyhp>
+		</div>
+	</div>
+
+
+	</pyhp>
+</div>

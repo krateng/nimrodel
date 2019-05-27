@@ -2,7 +2,7 @@ from bottle import Bottle, FormsDict, request
 from bottle import run as bottlerun
 import waitress
 from threading import Thread
-from doreah.pyhp import parse
+from doreah.pyhp import file
 import pkg_resources
 from . import versionstr
 
@@ -80,8 +80,9 @@ class AbstractAPI:
 		}
 
 	def gexplorer(self):
-		pyhpstr = pkg_resources.resource_string(__name__,"res/apiexplorer.pyhp")
-		return parse(pyhpstr,self.explorer())
+		folder = pkg_resources.resource_filename(__name__,"res/")
+		#pyhpstr = pkg_resources.resource_string(__name__,"res/apiexplorer.pyhp")
+		return file(folder + "/apiexplorer.pyhp",self.explorer())
 
 
 

@@ -1,0 +1,56 @@
+<div class="body">
+	<pyhp for="cls" in="api['classes']">
+	<div class="class_module collapsed">
+		<h2 class="header" onclick="toggleCollapse(this)">
+			<pyhp echo="api['url'] + '/' + cls['name'] + ''"></pyhp>
+		</h2>
+		<div class="body" a="test">
+			<b>Instances:</b>
+			<pyhp for="instance" in="cls['instances']" separator=" | ">
+				<span class="instancename_selector" onclick="insertInstance('{instance}',this)"><pyhp echo="instance" /></span>
+			</pyhp>
+			<!--<pyhp echo="' | '.join(cls['instances'])" />-->
+			<br/><br/>
+			<pyhp for="method" in="cls['methods']">
+			<div class="method_module collapsed">
+				<div class="header" onclick="toggleCollapse(this)">
+					<span class="method_{method['method']}"><pyhp echo="method['method']"></pyhp></span>
+					<pyhp echo="api['url']" />/<pyhp echo="cls['name']" />/<span class="instancename"><pyhp echo="'{' + cls['name'] + '}'" /></span>/<pyhp echo="method['name']" />
+				</div>
+
+				<div class="body">
+					<b>Description</b><br/>
+					<pyhp echo="method['description']"></pyhp>
+					<br/><br/>
+					<b>Parameters</b><br/>
+					<table class="paramlist">
+						<pyhp for="parameter" in="method['parameters']">
+						<tr>
+							<td><b><pyhp echo="parameter"></pyhp></b></td>
+							<td><i><pyhp echo="method['parameters'][parameter]['type']"></pyhp></i></td>
+							<td><pyhp echo="method['parameters'][parameter]['desc']"></pyhp></td>
+						</tr>
+						</pyhp>
+					</table>
+					<br/>
+					<b>Return value</b><br/>
+					<pyhp if="'type' in method['returns']">
+					<!--<b>Type:</b> <pyhp echo="method['returns']['type']"></pyhp><br/>-->
+					<i>(<pyhp echo="method['returns']['type']"></pyhp>)</i>
+					</pyhp>
+					<pyhp if="'desc' in method['returns']">
+					<!--<b>Description:</b> <pyhp echo="method['returns']['desc']"></pyhp>-->
+					<pyhp echo="method['returns']['desc']"></pyhp>
+					</pyhp>
+				</div>
+			</div>
+
+
+			</pyhp>
+		</div>
+	</div>
+
+
+	</pyhp>
+
+</div>
