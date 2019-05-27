@@ -123,8 +123,8 @@
 				<pyhp echo="api['url']"></pyhp>
 			</h1>
 
-			<!-- OBJECT APIS -->
-			<pyhp if="api['type'] == 'objectapi'">
+			<!-- OBJECT /REST APIS -->
+			<pyhp if="api['type'] in ['objectapi','restapi']">
 			<div class="body">
 				<pyhp for="cls" in="api['classes']">
 				<div class="class_module collapsed">

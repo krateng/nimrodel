@@ -1,5 +1,5 @@
 name = "nimrodel"
-version = 0,4,9
+version = 0,5,0
 versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",
@@ -16,11 +16,13 @@ requires = [
 
 from ._apiobject import API as ObjectAPI
 from ._apifunction import API as EndpointAPI
+from ._apirest import API as RestAPI
 from ._misc import Multi
 
 # short names
 OAPI = ObjectAPI
 EAPI = EndpointAPI
+RAPI = RestAPI
 
 # default
 API = OAPI

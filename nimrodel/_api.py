@@ -62,7 +62,12 @@ class AbstractAPI:
 		dec(self.route)
 		dec = self.server.post(self.pathprefix + "/<fullpath:path>")
 		dec(self.route)
-
+		dec = self.server.route(self.pathprefix + "/<fullpath:path>",method="PATCH")
+		dec(self.route)
+		dec = self.server.put(self.pathprefix + "/<fullpath:path>")
+		dec(self.route)
+		dec = self.server.delete(self.pathprefix + "/<fullpath:path>")
+		dec(self.route)
 
 	def explorer(self):
 		return {
@@ -86,8 +91,8 @@ class AbstractAPI:
 
 		keys = FormsDict.decode(request.query)
 
-		for k in keys:
-			print(k,keys[k])
+		#for k in keys:
+		#	print(k,keys[k])
 
 		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
 			json = request.json if request.json is not None else {}
@@ -96,7 +101,7 @@ class AbstractAPI:
 		else:
 			keys.update(FormsDict.decode(request.forms))
 
-		print(keys)
+		#print(keys)
 
 		nodes = fullpath.split("/")
 		reqmethod = request.method
