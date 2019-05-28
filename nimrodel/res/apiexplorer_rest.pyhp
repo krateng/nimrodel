@@ -13,6 +13,7 @@
 			<br/><br/>
 
 			<!-- the four default methods -->
+			<pyhp if="cls['allowed']['GET']" >
 			<div class="method_module collapsed">
 				<div class="header" onclick="toggleCollapse(this)">
 					<span class="method_GET">GET</span>
@@ -22,6 +23,9 @@
 					<b>Description</b><br/>Fetches the specified resource
 				</div>
 			</div>
+			</pyhp>
+
+			<pyhp if="cls['allowed']['POST']" >
 			<div class="method_module collapsed">
 				<div class="header" onclick="toggleCollapse(this)">
 					<span class="method_POST">POST</span>
@@ -31,6 +35,9 @@
 					<b>Description</b><br/>Creates the specified resource
 				</div>
 			</div>
+			</pyhp>
+
+			<pyhp if="cls['allowed']['PATCH']" >
 			<div class="method_module collapsed">
 				<div class="header" onclick="toggleCollapse(this)">
 					<span class="method_PATCH">PATCH</span>
@@ -40,6 +47,9 @@
 					<b>Description</b><br/>Alters the specified resource
 				</div>
 			</div>
+			</pyhp>
+
+			<pyhp if="cls['allowed']['DELETE']" >
 			<div class="method_module collapsed">
 				<div class="header" onclick="toggleCollapse(this)">
 					<span class="method_DELETE">DELETE</span>
@@ -49,6 +59,7 @@
 					<b>Description</b><br/>Deletes the specified resource
 				</div>
 			</div>
+			</pyhp>
 
 			<pyhp for="method" in="cls['methods']">
 			<div class="method_module collapsed">

@@ -10,6 +10,7 @@ class API(AbstractAPI):
 
 		self.classes = {}
 		self.objects = {}
+		self.methods = {} #not referring to object methods, but to http methods
 
 
 	# returns just the import information of this API
@@ -20,6 +21,7 @@ class API(AbstractAPI):
 			"classes":[
 				{
 					"name":cls,
+					"allowed":self.methods[self.classes[cls]],
 					"instances":[name for name in self.objects[self.classes[cls]]],
 					"methods":[],
 					"attributes":{}
@@ -72,13 +74,14 @@ class API(AbstractAPI):
 
 
 	# decorator for the class
-	def apiclass(self,path):
+	def apiclass(self,path,get=True,post=True,patch=True,delete=True):
 
 		def decorator(cls):
 
 			# save reference to this class
 			self.classes[path] = cls
 			self.objects[cls] = {}
+			self.methods[cls] = {"GET":get,"POST":post,"PATCH":patch,"DELETE":delete}
 
 			original_init = cls.__init__
 
