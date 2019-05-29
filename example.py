@@ -225,6 +225,15 @@ class Faction:
 			"admirals":self.admirals
 		}
 
+	# but of course we CAN have additional methods
+
+	@api.get("captains")
+	def get_captains(self):
+		return {
+			"generals":self.generals,
+			"admirals":self.admirals
+		}
+
 
 '''
 Try out:
