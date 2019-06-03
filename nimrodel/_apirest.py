@@ -52,6 +52,13 @@ class API(AbstractAPI):
 				obj = self.objects[cls][objkey]
 
 			if reqmethod == "PATCH":
+				try:
+					return obj.__patch__(**querykeys)
+				except:
+					pass
+
+				# if no __patch__ method is provided, we try everythin we can
+				# to somehow patch this object
 				for key in querykeys:
 					for assignattempt in (
 						# oh boy here we go again
