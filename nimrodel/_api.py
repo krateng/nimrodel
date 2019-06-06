@@ -1,4 +1,4 @@
-from bottle import Bottle, FormsDict, request
+from bottle import Bottle, FormsDict, request, response
 from bottle import run as bottlerun
 import waitress
 from threading import Thread
@@ -10,10 +10,13 @@ from . import versionstr
 
 class AbstractAPI:
 
-	def __init__(self,server=None,port=1337,IPv6=True,path="api",delay=False,**kwargs):
+	def __init__(self,server=None,port=1337,IPv6=True,path="api",delay=False,auth=None,**kwargs):
 
 		self.path = path
 		self.pathprefix = "" if path is None else ("/" + path)
+
+		if auth is not None:
+			self.auth = auth
 
 		self.init(**kwargs)
 
@@ -23,6 +26,9 @@ class AbstractAPI:
 			self.initserver(port=port,IPv6=IPv6,server=server)
 			self.setup_explorer()
 			self.setup_routing()
+
+	def auth(self,request):
+		return True
 
 	def initserver(self,server,port,IPv6):
 
@@ -57,7 +63,7 @@ class AbstractAPI:
 		g_exploredec(self.gexplorer)
 
 	def setup_routing(self):
-		# unified access
+
 		dec = self.server.get(self.pathprefix + "/<fullpath:path>")
 		dec(self.route)
 		dec = self.server.post(self.pathprefix + "/<fullpath:path>")
@@ -107,4 +113,8 @@ class AbstractAPI:
 		nodes = fullpath.split("/")
 		reqmethod = request.method
 
-		return self.handle(nodes,reqmethod,keys,headers)
+		if self.auth(request):
+			return self.handle(nodes,reqmethod,keys,headers)
+		else:
+			response.status = 403
+			return "Access denied"
