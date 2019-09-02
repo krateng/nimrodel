@@ -114,7 +114,35 @@ class AbstractAPI:
 		reqmethod = request.method
 
 		if self.auth(request):
-			return self.handle(nodes,reqmethod,keys,headers)
+			result = self.handle(nodes,reqmethod,keys,headers)
+			res = jsonify(result)
+			if isinstance(res,list):
+				return {"result":res}
+			else:
+				return res
 		else:
 			response.status = 403
 			return "Access denied"
+
+
+def jsonify(obj):
+
+
+	if isinstance(obj,str) or isinstance(obj,int): return obj
+
+	try:
+		return {k:jsonify(obj[k]) for k in obj}
+	except:
+		pass
+
+	try:
+		return [jsonify(element) for element in obj]
+	except:
+		pass
+
+	try:
+		return jsonify(obj.__apidict__())
+	except:
+		pass
+
+	return obj

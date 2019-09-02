@@ -1,5 +1,5 @@
 name = "nimrodel"
-version = 0,5,4
+version = 0,5,5
 versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",
@@ -12,6 +12,8 @@ requires = [
 	"doreah>=0.9.1",
 	"parse"
 ]
+
+
 
 
 from ._apiobject import API as ObjectAPI
