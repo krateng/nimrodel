@@ -129,6 +129,7 @@ def jsonify(obj):
 
 
 	if isinstance(obj,str) or isinstance(obj,int): return obj
+	if obj == [] or obj == {}: return obj
 
 	try:
 		return {k:jsonify(obj[k]) for k in obj}
