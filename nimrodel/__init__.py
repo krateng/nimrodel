@@ -1,5 +1,5 @@
 name = "nimrodel"
-version = 0,5,6
+version = 0,6
 versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",

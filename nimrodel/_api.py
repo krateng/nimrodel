@@ -1,4 +1,4 @@
-from bottle import Bottle, FormsDict, request, response
+from bottle import Bottle, FormsDict, request, response, Response
 from bottle import run as bottlerun
 import waitress
 from threading import Thread
@@ -10,13 +10,16 @@ from . import versionstr
 
 class AbstractAPI:
 
-	def __init__(self,server=None,port=1337,IPv6=True,path="api",delay=False,auth=None,**kwargs):
+	def __init__(self,server=None,port=1337,IPv6=True,path="api",delay=False,auth=None,type="json",root_node=None,**kwargs):
 
 		self.path = path
 		self.pathprefix = "" if path is None else ("/" + path)
 
 		if auth is not None:
 			self.auth = auth
+
+		self.type = type.lower()
+		self.rootnode = root_node
 
 		self.init(**kwargs)
 
@@ -115,35 +118,22 @@ class AbstractAPI:
 
 		if self.auth(request):
 			result = self.handle(nodes,reqmethod,keys,headers)
-			res = jsonify(result)
-			if isinstance(res,list):
-				return {"result":res}
+			if isinstance(result,Response):
+				return result
 			else:
-				return res
+				res = format_output[self.type](result,root_node=self.rootnode)
+				if isinstance(res,list):
+					return {"result":res}
+				else:
+					return res
 		else:
 			response.status = 403
 			return "Access denied"
 
 
-def jsonify(obj):
+from .output import json, xml
 
-
-	if isinstance(obj,str) or isinstance(obj,int): return obj
-	if obj == [] or obj == {}: return obj
-
-	try:
-		return {k:jsonify(obj[k]) for k in obj}
-	except:
-		pass
-
-	try:
-		return [jsonify(element) for element in obj]
-	except:
-		pass
-
-	try:
-		return jsonify(obj.__apidict__())
-	except:
-		pass
-
-	return obj
+format_output = {
+	"json":json.format,
+	"xml":xml.format
+}
