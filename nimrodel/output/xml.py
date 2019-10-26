@@ -1,3 +1,5 @@
+# Credit to https://gist.github.com/reimund/5435343/
+
 def format(d, root_node="root"):
 	wrap          =     False if None == root_node or isinstance(d, list) else True
 	root          = 'objects' if None == root_node else root_node
@@ -17,8 +19,7 @@ def format(d, root_node="root"):
 		for value in d:
 			children.append(format(value, root_singular))
 
-	#end_tag = '>' if 0 < len(children) else '/>'
-	end_tag = '>'
+	end_tag = '>' if 0 < len(children) else '/>'
 
 	if wrap or isinstance(d, dict):
 		xml = '<' + root + xml + end_tag
@@ -27,7 +28,7 @@ def format(d, root_node="root"):
 		for child in children:
 			xml = xml + child
 
-	if wrap or isinstance(d, dict):
-		xml = xml + '</' + root + '>'
+		if wrap or isinstance(d, dict):
+			xml = xml + '</' + root + '>'
 
 	return xml
