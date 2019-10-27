@@ -3,14 +3,23 @@ from bottle import run as bottlerun
 import waitress
 from threading import Thread
 from doreah.pyhp import file
+from doreah.logging import log
 import pkg_resources
 from . import versionstr
 
-
+__logmodulename__ = "nimrodel"
 
 class AbstractAPI:
 
-	def __init__(self,server=None,port=1337,IPv6=True,path="api",delay=False,auth=None,type="json",root_node=None,**kwargs):
+	def __init__(self,
+			server=None,
+			port=1337,IPv6=True,
+			path="api",
+			delay=False,
+			auth=None,
+			type="json",root_node=None,
+			debug=False,
+			**kwargs):
 
 		self.path = path
 		self.pathprefix = "" if path is None else ("/" + path)
@@ -20,6 +29,8 @@ class AbstractAPI:
 
 		self.type = type.lower()
 		self.rootnode = root_node
+
+		self.debug = debug
 
 		self.init(**kwargs)
 
@@ -101,8 +112,10 @@ class AbstractAPI:
 
 		keys = FormsDict.decode(request.query)
 
-		#for k in keys:
-		#	print(k,keys[k])
+		if self.debug:
+			log("Request to " + fullpath)
+			for k in keys:
+				log("\t" + k + " = " + keys.get(k))
 
 		if request.get_header("Content-Type") is not None and "application/json" in request.get_header("Content-Type"):
 			json = request.json if request.json is not None else {}
@@ -121,11 +134,9 @@ class AbstractAPI:
 			if isinstance(result,Response):
 				return result
 			else:
-				res = format_output[self.type](result,root_node=self.rootnode)
-				if isinstance(res,list):
-					return {"result":res}
-				else:
-					return res
+				result = serialize(result)
+				result = format_output[self.type](result,root_node=self.rootnode)
+				return result
 		else:
 			response.status = 403
 			return "Access denied"
@@ -137,3 +148,27 @@ format_output = {
 	"json":json.format,
 	"xml":xml.format
 }
+
+
+def serialize(obj):
+
+	if isinstance(obj,str) or isinstance(obj,int): return obj
+	if obj == [] or obj == {}: return obj
+
+	try:
+		return {k:serialize(obj[k]) for k in obj}
+	except Exception as e:
+		pass
+
+	try:
+		return [serialize(element) for element in obj]
+	except Exception as e:
+		pass
+
+	for f in ["__apidict__","__json__","__dict__"]:
+		try:
+			return serialize(getattr(obj,f)())
+		except Exception as e:
+			pass
+
+	return obj

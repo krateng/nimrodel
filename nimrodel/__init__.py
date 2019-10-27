@@ -1,5 +1,5 @@
 name = "nimrodel"
-version = 0,6,1
+version = 0,6,2
 versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",
@@ -9,7 +9,7 @@ author = {
 requires = [
 	"bottle",
 	"waitress",
-	"doreah>=0.9.1",
+	"doreah>=1.2.1",
 	"parse"
 ]
 
