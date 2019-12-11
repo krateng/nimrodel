@@ -8,6 +8,7 @@ nohup.out
 /*
 !/LICENSE
 !/README.md
+!/setup.py
 !/.gitignore
 !/example.py
 !/nimrodel

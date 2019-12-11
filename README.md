@@ -1,14 +1,16 @@
 # Nimrodel
 
+[![](https://img.shields.io/pypi/v/nimrodel?style=for-the-badge)](https://pypi.org/project/nimrodel/)
+[![](https://img.shields.io/pypi/dm/nimrodel?style=for-the-badge)](https://pypi.org/project/nimrodel/)
+[![](https://img.shields.io/github/stars/krateng/nimrodel?style=for-the-badge&color=purple)](https://github.com/krateng/nimrodel/stargazers)
+[![](https://img.shields.io/pypi/l/nimrodel?style=for-the-badge)](https://github.com/krateng/nimrodel/blob/master/LICENSE)
+
+
 A simple Bottle.py-wrapper to provide HTTP API access to any python object.
 
 # Requirements
 
-* [python3](https://www.python.org/) - [GitHub](https://github.com/python/cpython)
-* [bottle.py](https://bottlepy.org/) - [GitHub](https://github.com/bottlepy/bottle)
-* [waitress](https://docs.pylonsproject.org/projects/waitress/) - [GitHub](https://github.com/Pylons/waitress)
-* [doreah](https://pypi.org/project/doreah/) - [GitHub](https://github.com/krateng/doreah) (at least Version 0.9.1)
-* [parse](https://pypi.org/project/parse/) - [GitHub](https://github.com/r1chardj0n3s/parse)
+* Python 3.5 or higher
 
 # Quick Start
 

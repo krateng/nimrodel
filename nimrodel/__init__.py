@@ -1,5 +1,6 @@
 name = "nimrodel"
 version = 0,6,2
+desc = "Bottle-wrapper to make python objects accessible via HTTP API"
 versionstr = ".".join(str(n) for n in version)
 author = {
 	"name": "Johannes Krattenmacher",
@@ -12,7 +13,9 @@ requires = [
 	"doreah>=1.2.1",
 	"parse"
 ]
-
+resources = [
+	"res/*"
+]
 
 
 
