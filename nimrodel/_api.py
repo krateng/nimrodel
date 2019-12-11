@@ -6,6 +6,7 @@ from doreah.pyhp import file
 from doreah.logging import log
 import pkg_resources
 from . import versionstr
+from collections import Mapping
 
 __logmodulename__ = "nimrodel"
 
@@ -155,10 +156,11 @@ def serialize(obj):
 	if isinstance(obj,str) or isinstance(obj,int): return obj
 	if obj == [] or obj == {}: return obj
 
-	try:
-		return {k:serialize(obj[k]) for k in obj}
-	except Exception as e:
-		pass
+	if isinstance(obj,Mapping):
+		try:
+			return {k:serialize(obj[k]) for k in obj}
+		except Exception as e:
+			pass
 
 	try:
 		return [serialize(element) for element in obj]
