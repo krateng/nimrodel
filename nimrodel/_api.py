@@ -63,9 +63,12 @@ class AbstractAPI:
 			self.server = server
 
 	# if delay has been specified on creation, we can now mount this api to a server
-	def mount(self,server=None,port=1337,IPv6=True):
+	def mount(self,server=None,port=1337,IPv6=True,path=None):
 
 		self.initserver(port=port,IPv6=IPv6,server=server)
+		if path is not None:
+			self.path = path
+			self.pathprefix = "/" + path
 		self.setup_explorer()
 		self.setup_routing()
 
@@ -89,6 +92,20 @@ class AbstractAPI:
 		dec(self.route)
 		dec = self.server.delete(self.pathprefix + "/<fullpath:path>")
 		dec(self.route)
+
+		dec = self.server.get(self.pathprefix + "/")
+		dec(self.emptyroute)
+		dec = self.server.post(self.pathprefix + "/")
+		dec(self.emptyroute)
+		dec = self.server.route(self.pathprefix + "/")
+		dec(self.emptyroute)
+		dec = self.server.put(self.pathprefix + "/")
+		dec(self.emptyroute)
+		dec = self.server.delete(self.pathprefix + "/")
+		dec(self.emptyroute)
+
+	def emptyroute(self):
+		return self.route("")
 
 	def explorer(self):
 		return {
