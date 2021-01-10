@@ -140,7 +140,11 @@ class AbstractAPI:
 			keys.update(json)
 
 		else:
-			keys.update(FormsDict.decode(request.forms))
+			formdict = FormsDict.decode(request.forms)
+			for k in formdict:
+				for v in formdict.getall(k):
+					keys[k] = v
+			#keys.update(FormsDict.decode(request.forms))
 
 		#print(keys)
 
