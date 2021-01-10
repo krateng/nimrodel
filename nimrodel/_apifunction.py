@@ -69,7 +69,7 @@ class API(AbstractAPI):
 						if isinstance(types[k],MultiType):
 							subtype = types[k].elementtype
 							qk = querykeys.getall(k)
-							querykeys[k] = [subtype(e) for e in qk]
+							querykeys.replace(k,[subtype(e) for e in qk])
 						else:
 							querykeys[k] = types[k](querykeys[k])
 
