@@ -1,5 +1,5 @@
 name = "nimrodel"
-version = 0,6,5
+version = 0,7,0
 desc = "Bottle-wrapper to make python objects accessible via HTTP API"
 versionstr = ".".join(str(n) for n in version)
 author = {

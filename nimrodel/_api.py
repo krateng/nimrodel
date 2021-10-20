@@ -6,7 +6,7 @@ from doreah.pyhp import file
 from doreah.logging import log
 import pkg_resources
 from . import versionstr
-from collections import Mapping
+from collections.abc import Mapping
 
 __logmodulename__ = "nimrodel"
 
