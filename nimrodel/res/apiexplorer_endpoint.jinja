@@ -1,0 +1,38 @@
+<div class="body">
+	{% for endpoint in api.endpoints %}
+	<div class="method_module collapsed">
+		<div class="header" onclick="toggleCollapse(this)">
+			<span class="method_{{ endpoint.method }}">{{ endpoint.method }}</span>
+			{{ api.url }}/{{ endpoint.name }}
+		</div>
+
+		<div class="body">
+			<b>Description</b><br/>
+			{{ endpoint.description }}
+			<br/><br/>
+			<b>Parameters</b><br/>
+			<table class="paramlist">
+				{% for parameter in endpoint.parameters %}
+				<tr>
+					<td><b>{{ parameter }}</b></td>
+					<td><i>{{ endpoint.parameters[parameter]['type'] }}</i></td>
+					<td>{{ endpoint.parameters[parameter]['desc'] }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			<br/>
+			<b>Return value</b><br/>
+			{% if 'type' in endpoint.returns %}
+			<!--<b>Type:</b> <pyhp echo="method['returns']['type']"></pyhp><br/>-->
+			<i>({{ endpoint.returns.type }})</i>
+			{% endif %}
+			{% if 'desc' in endpoint.returns %}
+			<!--<b>Description:</b> <pyhp echo="method['returns']['desc']"></pyhp>-->
+			{{ endpoint.returns.desc }}
+			{% endif %}
+		</div>
+	</div>
+
+
+	{% endfor %}
+</div>

@@ -1,0 +1,57 @@
+<div class="body">
+	{% for cls in api.classes %}
+	<div class="class_module collapsed">
+		<h2 class="header" onclick="toggleCollapse(this)">
+			{{ api.url }}/{{ cls.name }}
+		</h2>
+		<div class="body" a="test">
+			<b>Instances:</b>
+			{% for instance in cls.instances %}
+				<span class="instancename_selector" onclick="insertInstance('{{ instance }}}',this)">{{ instance }}</span>
+				 |
+			{% endfor %}
+			<!--<pyhp echo="' | '.join(cls['instances'])" />-->
+			<br/><br/>
+			{% for method in cls.methods %}
+			<div class="method_module collapsed">
+				<div class="header" onclick="toggleCollapse(this)">
+					<span class="method_{{ method['method'] }}">{{ method.method }}</span>
+					{{ api.url }}/{{ cls.name }}/<span class="instancename">\{{{ cls.name }}\}</span>/{{ method.name }}
+				</div>
+
+				<div class="body">
+					<b>Description</b><br/>
+					{{ method.description }}
+					<br/><br/>
+					<b>Parameters</b><br/>
+					<table class="paramlist">
+						{% for parameter in method.parameters %}
+						<tr>
+							<td><b>{{ parameter }}</b></td>
+							<td><i>{{ method.parameters[parameter]['type'] }}</i></td>
+							<td><{{ method.parameters[parameter]['desc'] }}</td>
+						</tr>
+						{% endfor %}
+					</table>
+					<br/>
+					<b>Return value</b><br/>
+					{% if 'type' in method.returns %}
+					<!--<b>Type:</b> <pyhp echo="method['returns']['type']"></pyhp><br/>-->
+					<i>({{ method.returns.type }})</i>
+					{% endif %}
+					{% if 'desc' in method.returns %}
+					<!--<b>Description:</b> <pyhp echo="method['returns']['desc']"></pyhp>-->
+					{{ method.returns.desc }}
+					{% endif %}
+				</div>
+			</div>
+
+
+			{% endfor %}
+		</div>
+	</div>
+
+
+	{% endfor %}
+
+</div>

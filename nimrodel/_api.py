@@ -2,10 +2,9 @@ from bottle import Bottle, FormsDict, request, response, Response
 from bottle import run as bottlerun
 import waitress
 from threading import Thread
-from doreah.pyhp import file
+from jinja2 import Environment, PackageLoader, select_autoescape
 from doreah.logging import log
-import pkg_resources
-from . import versionstr
+from . import __version__
 from collections.abc import Mapping
 
 __logmodulename__ = "nimrodel"
@@ -21,6 +20,11 @@ class AbstractAPI:
 			type="json",root_node=None,
 			debug=False,
 			**kwargs):
+
+		self.jinja_environment = Environment(
+			loader=PackageLoader('nimrodel', "res"),
+			autoescape=select_autoescape(['html', 'xml'])
+		)
 
 		self.path = path
 		self.pathprefix = "" if path is None else ("/" + path)
@@ -41,6 +45,8 @@ class AbstractAPI:
 			self.initserver(port=port,IPv6=IPv6,server=server)
 			self.setup_explorer()
 			self.setup_routing()
+
+
 
 	def auth(self,request):
 		return True
@@ -110,7 +116,7 @@ class AbstractAPI:
 	def explorer(self):
 		return {
 			"information":{
-				"nimrodel-version":versionstr
+				"nimrodel-version":__version__
 			},
 			"apis":[
 				api.api_info() for api in self.server._apis
@@ -118,9 +124,8 @@ class AbstractAPI:
 		}
 
 	def gexplorer(self):
-		folder = pkg_resources.resource_filename(__name__,"res/")
-		#pyhpstr = pkg_resources.resource_string(__name__,"res/apiexplorer.pyhp")
-		return file(folder + "/apiexplorer.pyhp",self.explorer())
+		template = self.jinja_environment.get_template('apiexplorer.jinja')
+		return template.render(**self.explorer())
 
 
 

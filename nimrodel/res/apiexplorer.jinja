@@ -1,0 +1,154 @@
+<html>
+	<head>
+		<title>API Explorer</title>
+		<style>
+
+			@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+			body {
+				font-family:"Ubuntu";
+				padding:35px;
+			}
+			.collapsed > .body {
+				display:none;
+			}
+
+			.body {
+				padding-left:35px;
+			}
+
+			.api_module > .header {
+				padding:10px;
+				font-weight:bold;
+				/*font-size:140%;*/
+				cursor:pointer;
+				color:black;
+			}
+			.api_module.collapsed > .header {
+				color:grey;
+			}
+			.api_module.collapsed > .header:hover {
+				color:black;
+			}
+
+			.api_module > .body {
+
+			}
+
+
+			.class_module > .header {
+				cursor:pointer;
+			}
+			.class_module.collapsed > .header {
+				color:grey;
+			}
+			.class_module.collapsed > .header:hover {
+				color:black;
+			}
+
+			.method_module {
+				padding-bottom:15px;
+			}
+			.method_module > .body {
+				cursor:pointer;
+				border: 1px solid #cccccc;
+				padding:15px;
+			}
+			.method_module > .header {
+				cursor:pointer;
+				border: 1px solid #cccccc;
+				background-color: #e0e0e0;
+			}
+
+			.method_GET, .method_POST, .method_PATCH, .method_DELETE {
+				padding:5px;
+				color:white;
+				border-radius:3px;
+				width: 60px;
+				font-size:80%;
+    				display: inline-block;
+    				text-align: center;
+			}
+			.method_GET {
+				background-color:blue;
+			}
+			.method_POST {
+				background-color:green;
+			}
+			.method_PATCH {
+				background-color:yellow;
+				color:black;
+			}
+			.method_DELETE {
+				background-color:red;
+			}
+			.instancename {
+				color:grey;
+			}
+			.instancename_selector {
+				color:grey;
+				cursor:pointer;
+			}
+
+			table.paramlist td {
+				padding-right:15px;
+			}
+		</style>
+		<script>
+			function toggleCollapse(e) {
+				e.parentElement.classList.toggle("collapsed");
+			}
+
+			function insertInstance(name,element) {
+				// reset all selectors
+				sels = element.parentElement.getElementsByClassName("instancename_selector");
+				for (let e of sels) {
+					e.style = "";
+				}
+				// emph this one
+				element.style = "color:black;";
+
+				// fill in name
+				els = element.parentElement.getElementsByClassName("instancename");
+				for (let e of els) {
+					e.innerHTML = name;
+					e.style = "color:black;";
+				}
+
+			}
+		</script>
+	</head>
+
+	<body>
+
+		<h1>API Explorer</h1>
+		generated with <a href="https://github.com/krateng/nimrodel">nimrodel</a> {{ information['nimrodel-version'] }}
+
+		{% for api in apis %}
+		<div class="api_module collapsed">
+			<h1 class="header" onclick="toggleCollapse(this)">
+				{{ api.url }}
+			</h1>
+
+			<!-- OBJECT APIS -->
+			{% if api.type == 'objectapi' %}
+				{% include 'apiexplorer_object.jinja' %}
+			{% endif %}
+
+			<!-- REST APIS -->
+			{% if api.type == 'restapi' %}
+				{% include 'apiexplorer_rest.jinja' %}
+			{% endif %}
+
+
+			<!-- ENDPOINT APIS -->
+			{% if api.type == 'functionapi' %}
+				{% include 'apiexplorer_endpoint.jinja' %}
+			{% endif %}
+		</div>
+
+		{% endfor %}
+
+	</body>
+
+</html>
