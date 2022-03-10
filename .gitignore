@@ -6,9 +6,11 @@
 nohup.out
 
 /*
+!/pyproject.toml
 !/LICENSE
 !/README.md
 !/setup.py
 !/.gitignore
+!/.github
 !/example.py
 !/nimrodel

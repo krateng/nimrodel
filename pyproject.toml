@@ -1,0 +1,30 @@
+[project]
+name = "nimrodel"
+version = "0.8.0"
+description = "Bottle-wrapper to make python objects accessible via HTTP API"
+readme = "./README.md"
+requires-python = ">=3.6"
+license = { file="./LICENSE" }
+authors = [ { name="Johannes Krattenmacher", email="nimrodel@dev.krateng.ch" } ]
+
+urls.repository = "https://github.com/krateng/nimrodel"
+urls.documentation = "https://github.com/krateng/nimrodel"
+urls.homepage = "https://github.com/krateng/nimrodel"
+
+keywords = ["library", "api"]
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+	"Operating System :: OS Independent"
+]
+
+dependencies = [
+	"bottle",
+	"waitress",
+	"doreah>=1.2.1",
+	"parse"
+]
+
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
