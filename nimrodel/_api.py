@@ -140,28 +140,29 @@ class AbstractAPI:
 			for k in keys:
 				log("\t" + k + " = " + keys.get(k))
 
-		if request.get_header("Content-Type") is not None:
-			if "application/json" in request.get_header("Content-Type"):
-				json = request.json if request.json is not None else {}
-				keys.update(json)
+		content_type = request.get_header("Content-Type") or ""
+		content_type = content_type.split(';')[0]
 
-			elif "multipart/form-data" in request.get_header("Content-Type"):
-				formdict = FormsDict.decode(request.forms)
-				for k in formdict:
-					print("\t",k,formdict.getall(k))
-					for v in formdict.getall(k):
-						keys[k] = v
-				#keys.update(FormsDict.decode(request.forms))
+		if content_type == "application/json":
+			json = request.json if request.json is not None else {}
+			keys.update(json)
 
-			else:
-				response.status = 415
-				return "Content-Type not accepted"
+		elif content_type == "multipart/form-data" or content_type == "application/x-www-form-urlencoded":
+			formdict = FormsDict.decode(request.forms)
+			for k in formdict:
+				for v in formdict.getall(k):
+					keys[k] = v
+			#keys.update(FormsDict.decode(request.forms))
+
+		elif content_type != "":
+			response.status = 415
+			return "Content-Type not accepted"
 
 		else:
 			content = request.body.read()
 			if len(content) > 0:
 				response.status = 415
-				return "Missing Content-Type header"
+				return "Missing Content-Type header with non-empty body"
 
 		#print(keys)
 
